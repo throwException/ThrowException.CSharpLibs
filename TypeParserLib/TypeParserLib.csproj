@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.props" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EF54B556-E862-4392-BFD5-6FE31FCCCA35}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ThrowException.CSharpLibs.TypeParserLib</RootNamespace>
+    <AssemblyName>ThrowException.CSharpLibs.TypeParserLib</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <PackageVersion>1.0</PackageVersion>
+    <Authors>Stefan Thöni</Authors>
+    <Owners>Stefan Thöni</Owners>
+    <Summary>A library that helps with parsing string values to different types.</Summary>
+    <Title>TypeParserLib</Title>
+    <Description>A library that helps with parsing string values to different types. Concieved as a building block for more complicated parser libraries.</Description>
+    <PackOnBuild>true</PackOnBuild>
+    <PackageTags>Parser Type String</PackageTags>
+    <PackageId>ThrowException.CSharpLibs.TypeParserLib</PackageId>
+    <PackageProjectUrl>https://github.com/throwException/ThrowException.CSharpLibs</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/binary.svg</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeParser.cs" />
+    <Compile Include="ValueParseException.cs" />
+    <Compile Include="TypeParserMisconfigurationException.cs" />
+    <Compile Include="TypeParsers.cs" />
+    <Compile Include="TypeParserDecimal.cs" />
+    <Compile Include="TypeParserFloat.cs" />
+    <Compile Include="TypeParserDouble.cs" />
+    <Compile Include="TypeParserUint64.cs" />
+    <Compile Include="TypeParserUint32.cs" />
+    <Compile Include="TypeParserInt64.cs" />
+    <Compile Include="TypeParserInt32.cs" />
+    <Compile Include="TypeParserInt16.cs" />
+    <Compile Include="TypeParserUint16.cs" />
+    <Compile Include="TypeParserByte.cs" />
+    <Compile Include="TypeParserSbyte.cs" />
+    <Compile Include="TypeParserString.cs" />
+    <Compile Include="TypeParserFilename.cs" />
+    <Compile Include="TypeParserEnum.cs" />
+    <Compile Include="TypeParserBool.cs" />
+    <Compile Include="TypeParserDateTime.cs" />
+    <Compile Include="TypeParserTimeSpan.cs" />
+    <Compile Include="TypeParserBytes.cs" />
+    <Compile Include="TypeParserBytesBase64.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="None" ResourceNamePolicy="FileFormatDefault" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <Import Project="..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.targets" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.targets')" />
+</Project>

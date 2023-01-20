@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.props" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2EC0BB41-7572-46E4-8F39-96AF9942E0C1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ThrowException.CSharpLibs.ConfigParserLib</RootNamespace>
+    <AssemblyName>ThrowException.CSharpLibs.ConfigParserLib</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <PackageId>ThrowException.CSharpLibs.ConfigParserLib</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Stefan Thöni</Authors>
+    <Owners>Stefan Thöni</Owners>
+    <Summary>Parses config files.</Summary>
+    <PackageTags>Config Parse File</PackageTags>
+    <Title>ConfigParserLib</Title>
+    <Description>Parses config files.</Description>
+    <PackageProjectUrl>https://github.com/throwException/ThrowException.CSharpLibs</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/binary.svg</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingAttribute.cs" />
+    <Compile Include="SettingManager.cs" />
+    <Compile Include="ConfigParseException.cs" />
+    <Compile Include="ConfigParserMisconfigurationException.cs" />
+    <Compile Include="PropertyInfoExtensions.cs" />
+    <Compile Include="ConfigManager.cs" />
+    <Compile Include="SettingInstance.cs" />
+    <Compile Include="IConfig.cs" />
+    <Compile Include="SettingManagerScalar.cs" />
+    <Compile Include="SettingManagerConfig.cs" />
+    <Compile Include="SettingManagerListConfig.cs" />
+    <Compile Include="SettingManagerScalarConfig.cs" />
+    <Compile Include="SettingManagerList.cs" />
+    <Compile Include="XmlConfigParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TypeParserLib\TypeParserLib.csproj">
+      <Project>{EF54B556-E862-4392-BFD5-6FE31FCCCA35}</Project>
+      <Name>TypeParserLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="None" ResourceNamePolicy="FileFormatDefault" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <Import Project="..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.targets" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.targets')" />
+</Project>
