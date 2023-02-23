@@ -16,5 +16,11 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
             var manager = new ConfigManager<T>();
             return manager.Apply(value);
         }
+
+        protected SettingInstance Get(T value)
+        {
+            var manager = new ConfigManager<T>();
+            return manager.Get(value, Name);
+        }
     }
 }

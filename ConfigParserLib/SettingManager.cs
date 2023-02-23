@@ -43,6 +43,8 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
 
         public abstract void Apply(object obj);
 
+        public abstract IEnumerable<SettingInstance> Get(object obj);
+
         public abstract void Setup();
     }
 
@@ -77,6 +79,42 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
                             value = default(T);
                             return false;
                         }
+                    }
+                    else
+                    {
+                        throw new ConfigParserMisconfigurationException("{0}: Parser {1} not suitable for type {2}", Name, Attribute.Parser.FullName, typeof(T).FullName);
+                    }
+                }
+            }
+            catch (ValueParseException exception)
+            {
+                throw new ConfigParseException(exception.Message);
+            }
+            catch (ConfigParseException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                throw new ConfigParserMisconfigurationException("{0}: {1}", Name, exception.Message);
+            }
+        }
+
+        public string Format(T value)
+        {
+            try
+            {
+                if (Attribute.Parser == null)
+                {
+                    return TypeParsers.Format(value);
+                }
+                else
+                {
+                    object parserObject = Attribute.Parser.GetConstructor(new Type[0]).Invoke(new object[0]);
+
+                    if (parserObject is TypeParser<T> parser)
+                    {
+                        return parser.Format(value);
                     }
                     else
                     {

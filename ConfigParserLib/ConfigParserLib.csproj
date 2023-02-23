@@ -10,7 +10,7 @@
     <AssemblyName>ThrowException.CSharpLibs.ConfigParserLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PackageId>ThrowException.CSharpLibs.ConfigParserLib</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Authors>Stefan Thöni</Authors>
     <Owners>Stefan Thöni</Owners>
     <Summary>Parses config files.</Summary>
@@ -60,7 +60,7 @@
     <Compile Include="SettingManagerListConfig.cs" />
     <Compile Include="SettingManagerScalarConfig.cs" />
     <Compile Include="SettingManagerList.cs" />
-    <Compile Include="XmlConfigParser.cs" />
+    <Compile Include="XmlConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TypeParserLib\TypeParserLib.csproj">

@@ -139,5 +139,20 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
 
             return result;
         }
+
+        public SettingInstance Get(T value, string name)
+        {
+            var setting = new SettingInstance(name, null);
+
+            foreach (var sub in _settings)
+            {
+                foreach (var subSetting in sub.Get(value))
+                {
+                    setting.Add(subSetting);
+                }
+            }
+
+            return setting;
+        }
     }
 }

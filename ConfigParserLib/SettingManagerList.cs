@@ -123,5 +123,13 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
                 Property.GetBackingField().SetValue(obj, _values);
             }
         }
+
+        public override IEnumerable<SettingInstance> Get(object obj)
+        {
+            foreach (var value in Property.GetBackingField().GetValue(obj) as IEnumerable<T>)
+            {
+                yield return new SettingInstance(Name, Format(value));
+            }
+        }
     }
 }

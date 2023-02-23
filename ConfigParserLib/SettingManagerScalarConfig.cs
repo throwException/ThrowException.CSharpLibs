@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace ThrowException.CSharpLibs.ConfigParserLib
@@ -53,6 +54,12 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
             {
                 Property.GetBackingField().SetValue(obj, _value);
             }
+        }
+
+        public override IEnumerable<SettingInstance> Get(object obj)
+        {
+            T value = (T)Property.GetBackingField().GetValue(obj);
+            yield return Get(value);
         }
     }
 

@@ -51,7 +51,7 @@ namespace ThrowException.CSharpLibs.ConfigParserTest
                         new XElement("number", 1338))));
             var text = document.ToString();
 
-            var parser = new XmlConfigParser<Config>();
+            var parser = new XmlConfig<Config>();
             var config = parser.Parse(text);
 
             Assert.AreEqual(config.Number, 23);
@@ -64,6 +64,20 @@ namespace ThrowException.CSharpLibs.ConfigParserTest
             Assert.AreEqual(config.Subs.Count(), 2);
             Assert.AreEqual(config.Subs.ElementAt(0).Number, 1337);
             Assert.AreEqual(config.Subs.ElementAt(1).Number, 1338);
+
+            var data = parser.FormatData(config);
+            var config2 = parser.Parse(data);
+
+            Assert.AreEqual(config2.Number, 23);
+            Assert.AreEqual(config2.Value, 42.23d);
+            Assert.AreEqual(config2.Strings.Count(), 3);
+            Assert.AreEqual(config2.Strings.ElementAt(0), "t1");
+            Assert.AreEqual(config2.Strings.ElementAt(1), "t2");
+            Assert.AreEqual(config2.Strings.ElementAt(2), "t3");
+            Assert.AreEqual(config2.Sub.Number, 17);
+            Assert.AreEqual(config2.Subs.Count(), 2);
+            Assert.AreEqual(config2.Subs.ElementAt(0).Number, 1337);
+            Assert.AreEqual(config2.Subs.ElementAt(1).Number, 1338);
         }
     }
 }
