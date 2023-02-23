@@ -13,10 +13,10 @@ namespace ThrowException.CSharpLibs.TypeParserTest
         public void TryParse()
         {
             Assert.True(TypeParsers.TryParse("2010-12-31", out DateTime v1));
-            Assert.AreEqual(v1, DateTime.Parse("2010-12-31", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
+            Assert.AreEqual(v1, new DateTime(2010, 12, 31, 0, 0, 0, DateTimeKind.Utc));
 
             Assert.True(TypeParsers.TryParse("2010-12-31 23:59:59", out DateTime v2));
-            Assert.AreEqual(v2, DateTime.Parse("2010-12-31T23:59:59", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
+            Assert.AreEqual(v2, new DateTime(2010, 12, 31, 23, 59, 59, DateTimeKind.Utc));
 
             Assert.False(TypeParsers.TryParse("hello", out DateTime v3));
         }
@@ -33,9 +33,9 @@ namespace ThrowException.CSharpLibs.TypeParserTest
         public void Parse()
         {
             var parser = new TypeParserDateTime();
-            Assert.AreEqual(parser.Parse("2010-12-31"), DateTime.Parse("2010-12-31", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
-            Assert.AreEqual(parser.Parse("2010-12-31 23:59:59"), DateTime.Parse("2010-12-31T23:59:59", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
-            Assert.AreEqual(parser.Parse("2010-12-31T23:59:59"), DateTime.Parse("2010-12-31T23:59:59", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal));
+            Assert.AreEqual(new DateTime(2010, 12, 31, 0, 0, 0, DateTimeKind.Utc), parser.Parse("2010-12-31"));
+            Assert.AreEqual(new DateTime(2010, 12, 31, 23, 59, 59, DateTimeKind.Utc), parser.Parse("2010-12-31 23:59:59"));
+            Assert.AreEqual(new DateTime(2010, 12, 31, 23, 59, 59, DateTimeKind.Utc), parser.Parse("2010-12-31T23:59:59"));
         }
 
         [Test()]
@@ -66,6 +66,15 @@ namespace ThrowException.CSharpLibs.TypeParserTest
             Assert.False(parser.CanParse("2010-12-33T25:59:59"));
             Assert.False(parser.CanParse("2010-12-33T23:79:59"));
             Assert.False(parser.CanParse("2010-12-33T23:59:89"));
+        }
+
+        [Test()]
+        public void Format()
+        {
+            var parser = new TypeParserDateTime();
+            Assert.AreEqual("2010-12-31T23:59:59", parser.Format(new DateTime(2010, 12, 31, 23, 59, 59, DateTimeKind.Utc)));
+
+            Assert.AreEqual("2010-12-31T23:59:59", TypeParsers.Format(new DateTime(2010, 12, 31, 23, 59, 59, DateTimeKind.Utc)));
         }
     }
 }

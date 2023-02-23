@@ -56,5 +56,24 @@ namespace ThrowException.CSharpLibs.TypeParserTest
             Assert.False(parser.CanParse("aGVsbG.gd29ybGQh"));
             Assert.False(parser.CanParse("YW5vdGh_ciB0ZXh0IGluIGJ5dGVzLi4u"));
         }
+
+        [Test()]
+        public void Format()
+        {
+            {
+                var parser = new TypeParserBytesBase64();
+                Assert.AreEqual("aGVsbG8=", parser.Format(Convert.FromBase64String("aGVsbG8=")));
+                Assert.AreEqual("aGVsbG8gd29ybGQh", parser.Format(Convert.FromBase64String("aGVsbG8gd29ybGQh")));
+                Assert.AreEqual("YW5vdGhlciB0ZXh0IGluIGJ5dGVzLi4u", parser.Format(Convert.FromBase64String("YW5vdGhlciB0ZXh0IGluIGJ5dGVzLi4u")));
+            }
+
+            {
+                TypeParsers.ResetConfiguration();
+                var parser = TypeParsers.Get(typeof(TypeParserBytesBase64));
+                parser.Enabled = true;
+                parser.Precedence = 101;
+                Assert.AreEqual("aGVsbG8=", TypeParsers.Format(Convert.FromBase64String("aGVsbG8=")));
+            }
+        }
     }
 }

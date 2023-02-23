@@ -173,7 +173,6 @@ namespace ThrowException.CSharpLibs.TypeParserTest
                 Assert.AreEqual(parser.Parse(ulong.MaxValue.ToString()), ulong.MaxValue);
                 Assert.AreEqual(parser.Parse(ulong.MinValue.ToString()), ulong.MinValue);
             }
-
         }
 
         [Test()]
@@ -306,7 +305,124 @@ namespace ThrowException.CSharpLibs.TypeParserTest
                 Assert.False(parser.CanParse("x"));
                 Assert.False(parser.CanParse("§"));
             }
-
         }
+
+        [Test()]
+        public void Format()
+        {
+            {
+                var parser = new TypeParserSbyte();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("127", parser.Format(127));
+                Assert.AreEqual("-127", parser.Format(-127));
+                Assert.AreEqual(sbyte.MaxValue.ToString(), parser.Format(sbyte.MaxValue));
+                Assert.AreEqual(sbyte.MinValue.ToString(), parser.Format(sbyte.MinValue));
+            }
+
+            {
+                var parser = new TypeParserInt16();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("1337", parser.Format(1337));
+                Assert.AreEqual("-1337", parser.Format(-1337));
+                Assert.AreEqual("32000", parser.Format(32000));
+                Assert.AreEqual("-32000", parser.Format(-32000));
+                Assert.AreEqual(short.MaxValue.ToString(), parser.Format(short.MaxValue));
+                Assert.AreEqual(short.MinValue.ToString(), parser.Format(short.MinValue));
+            }
+
+            {
+                var parser = new TypeParserInt32();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("1337", parser.Format(1337));
+                Assert.AreEqual("-1337", parser.Format(-1337));
+                Assert.AreEqual("32000", parser.Format(32000));
+                Assert.AreEqual("-32000", parser.Format(-32000));
+                Assert.AreEqual("32000000", parser.Format(32000000));
+                Assert.AreEqual("-32000000", parser.Format(-32000000));
+                Assert.AreEqual(int.MaxValue.ToString(), parser.Format(int.MaxValue));
+                Assert.AreEqual(int.MinValue.ToString(), parser.Format(int.MinValue));
+            }
+
+            {
+                var parser = new TypeParserInt64();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("1337", parser.Format(1337));
+                Assert.AreEqual("-1337", parser.Format(-1337));
+                Assert.AreEqual("32000", parser.Format(32000));
+                Assert.AreEqual("-32000", parser.Format(-32000));
+                Assert.AreEqual("32000000", parser.Format(32000000));
+                Assert.AreEqual("-32000000", parser.Format(-32000000));
+                Assert.AreEqual("3200000000000", parser.Format(3200000000000));
+                Assert.AreEqual("-3200000000000", parser.Format(-3200000000000));
+                Assert.AreEqual(long.MaxValue.ToString(), parser.Format(long.MaxValue));
+                Assert.AreEqual(long.MinValue.ToString(), parser.Format(long.MinValue));
+            }
+
+            {
+                var parser = new TypeParserByte();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("233", parser.Format(233));
+                Assert.AreEqual(byte.MaxValue.ToString(), parser.Format(byte.MaxValue));
+                Assert.AreEqual(byte.MinValue.ToString(), parser.Format(byte.MinValue));
+            }
+
+            {
+                var parser = new TypeParserUint16();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("1337", parser.Format(1337));
+                Assert.AreEqual("32000", parser.Format(32000));
+                Assert.AreEqual(ushort.MaxValue.ToString(), parser.Format(ushort.MaxValue));
+                Assert.AreEqual(ushort.MinValue.ToString(), parser.Format(ushort.MinValue));
+            }
+
+            {
+                var parser = new TypeParserUint32();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("1337", parser.Format(1337));
+                Assert.AreEqual("32000", parser.Format(32000));
+                Assert.AreEqual("32000000", parser.Format(32000000));
+                Assert.AreEqual(uint.MaxValue.ToString(), parser.Format(uint.MaxValue));
+                Assert.AreEqual(uint.MinValue.ToString(), parser.Format(uint.MinValue));
+            }
+
+            {
+                var parser = new TypeParserUint64();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("1337", parser.Format(1337));
+                Assert.AreEqual("32000", parser.Format(32000));
+                Assert.AreEqual("32000000", parser.Format(32000000));
+                Assert.AreEqual("3200000000000", parser.Format(3200000000000));
+                Assert.AreEqual(ulong.MaxValue.ToString(), parser.Format(ulong.MaxValue));
+                Assert.AreEqual(ulong.MinValue.ToString(), parser.Format(ulong.MinValue));
+            }
+
+            {
+                Assert.AreEqual("32000000", TypeParsers.Format(32000000));
+                Assert.AreEqual("32000000", TypeParsers.Format(32000000U));
+                Assert.AreEqual("3200000000000", TypeParsers.Format(3200000000000L));
+                Assert.AreEqual("3200000000000", TypeParsers.Format(3200000000000UL));
+            }
+        }
+
     }
 }

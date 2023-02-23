@@ -43,7 +43,7 @@
     <Compile Include="TypeParserIntegerTest.cs" />
     <Compile Include="TypeParseFloatingTest.cs" />
     <Compile Include="TypeParseBoolTest.cs" />
-    <Compile Include="TypeBoolStringTest.cs" />
+    <Compile Include="TypeParseStringTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TypeParserLib\TypeParserLib.csproj">

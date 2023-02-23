@@ -4,6 +4,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserDecimal : TypeParser<decimal>
     {
+        public override string Format(decimal value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return decimal.TryParse(value, out decimal dummy);

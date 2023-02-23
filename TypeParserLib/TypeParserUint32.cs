@@ -4,6 +4,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserUint32 : TypeParser<uint>
     {
+        public override string Format(uint value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return uint.TryParse(value, out uint dummy);

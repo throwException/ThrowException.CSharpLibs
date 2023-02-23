@@ -6,6 +6,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserBytesBase64 : TypeParser<byte[]>
     {
+        public override string Format(byte[] value)
+        {
+            return Convert.ToBase64String(value);
+        }
+
         public TypeParserBytesBase64()
         {
             Enabled = false;

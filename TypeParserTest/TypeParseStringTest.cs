@@ -7,7 +7,7 @@ using ThrowException.CSharpLibs.TypeParserLib;
 namespace ThrowException.CSharpLibs.TypeParserTest
 {
     [TestFixture()]
-    public class TypeBoolStringTest
+    public class TypeParseStringTest
     {
         [Test()]
         public void TryParse()
@@ -28,6 +28,15 @@ namespace ThrowException.CSharpLibs.TypeParserTest
         {
             var parser = new TypeParserString();
             Assert.True(parser.CanParse("hello"));
+        }
+
+        [Test()]
+        public void Format()
+        {
+            var parser = new TypeParserString();
+            Assert.AreEqual("hello", parser.Format("hello"));
+
+            Assert.AreEqual("hello", TypeParsers.Format("hello"));
         }
     }
 }

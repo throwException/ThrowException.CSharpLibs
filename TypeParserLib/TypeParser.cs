@@ -23,6 +23,8 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 
     public abstract class TypeParser<T> : TypeParser
     {
+        public abstract string Format(T value);
+
         public abstract T Parse(string value);
 
         public abstract bool CanParse(string value);

@@ -5,6 +5,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserFilename : TypeParser<string>
     {
+        public override string Format(string value)
+        {
+            return value;
+        }
+
         public TypeParserFilename()
         {
             Enabled = false;

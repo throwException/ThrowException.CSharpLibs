@@ -4,6 +4,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserDouble : TypeParser<double>
     {
+        public override string Format(double value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return double.TryParse(value, out double dummy);

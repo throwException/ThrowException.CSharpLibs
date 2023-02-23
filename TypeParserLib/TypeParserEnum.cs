@@ -5,6 +5,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
     public class TypeParserEnum<T> : TypeParser<T>
         where T : struct, Enum
     {
+        public override string Format(T value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return Enum.TryParse<T>(value, out T dummy);

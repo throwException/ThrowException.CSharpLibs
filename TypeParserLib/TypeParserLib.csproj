@@ -9,7 +9,7 @@
     <RootNamespace>ThrowException.CSharpLibs.TypeParserLib</RootNamespace>
     <AssemblyName>ThrowException.CSharpLibs.TypeParserLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <PackageVersion>1.0</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Authors>Stefan Thöni</Authors>
     <Owners>Stefan Thöni</Owners>
     <Summary>A library that helps with parsing string values to different types.</Summary>

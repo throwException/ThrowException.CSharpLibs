@@ -6,6 +6,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserBool : TypeParser<bool>
     {
+        public override string Format(bool value)
+        {
+            return value ? "true" : "false";
+        }
+
         public override bool CanParse(string value)
         {
             switch (value.ToLowerInvariant())

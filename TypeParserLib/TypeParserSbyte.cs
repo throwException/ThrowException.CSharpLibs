@@ -4,6 +4,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserSbyte : TypeParser<sbyte>
     {
+        public override string Format(sbyte value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return sbyte.TryParse(value, out sbyte dummy);

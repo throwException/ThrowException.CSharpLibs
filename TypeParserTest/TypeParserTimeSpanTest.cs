@@ -108,5 +108,16 @@ namespace ThrowException.CSharpLibs.TypeParserTest
             Assert.False(parser.CanParse("..."));
             Assert.False(parser.CanParse("--27qs"));
         }
+
+        [Test()]
+        public void Format()
+        {
+            var parser = new TypeParserTimeSpan();
+            Assert.AreEqual("113.23:59:59.0000000", parser.Format(new TimeSpan(113, 23, 59, 59)));
+            Assert.AreEqual("113.23:59:59.1110000", parser.Format(new TimeSpan(113, 23, 59, 59, 111)));
+
+            Assert.AreEqual("113.23:59:59.0000000", TypeParsers.Format(new TimeSpan(113, 23, 59, 59)));
+            Assert.AreEqual("113.23:59:59.1110000", TypeParsers.Format(new TimeSpan(113, 23, 59, 59, 111)));
+        }
     }
 }

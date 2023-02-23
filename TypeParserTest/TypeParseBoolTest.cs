@@ -78,5 +78,16 @@ namespace ThrowException.CSharpLibs.TypeParserTest
             Assert.False(parser.CanParse("x"));
             Assert.False(parser.CanParse("§"));
         }
+
+        [Test()]
+        public void Format()
+        {
+            var parser = new TypeParserBool();
+            Assert.AreEqual("false", parser.Format(false));
+            Assert.AreEqual("true", parser.Format(true));
+
+            Assert.AreEqual("false", TypeParsers.Format(false));
+            Assert.AreEqual("true", TypeParsers.Format(true));
+        }
     }
 }

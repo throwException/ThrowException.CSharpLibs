@@ -127,5 +127,19 @@ namespace ThrowException.CSharpLibs.TypeParserLib
             v = default(T);
             return false;
         }
+
+        public static string Format<T>(T v)
+        {
+            var parsers = Get<T>();
+
+            foreach (var parser in parsers
+                .Where(p => p.Enabled)
+                .OrderByDescending(p => p.Precedence))
+            {
+                return parser.Format(v);
+            }
+
+            return null;
+        }
     }
 }

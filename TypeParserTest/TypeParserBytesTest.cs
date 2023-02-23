@@ -58,5 +58,16 @@ namespace ThrowException.CSharpLibs.TypeParserTest
             Assert.False(parser.CanParse("caf§affe"));
             Assert.False(parser.CanParse("0102Z30405060708090A0B0C0D"));
         }
+
+        [Test()]
+        public void Format()
+        {
+            var parser = new TypeParserBytes();
+            Assert.AreEqual("1337", parser.Format("1337".ParseHexBytes()));
+            Assert.AreEqual("cafeaffe", parser.Format("cafeaffe".ParseHexBytes()));
+            Assert.AreEqual("0102030405060708090a0b0c0d", parser.Format("0102030405060708090A0B0C0D".ParseHexBytes()));
+
+            Assert.AreEqual("1337", TypeParsers.Format("1337".ParseHexBytes()));
+        }
     }
 }

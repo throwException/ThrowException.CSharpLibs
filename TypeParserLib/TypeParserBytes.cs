@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserBytes : TypeParser<byte[]>
     {
+        public override string Format(byte[] value)
+        {
+            return string.Join(string.Empty, value.Select(b => string.Format("{0:x2}", b)).ToArray());
+        }
+
         public override bool CanParse(string value)
         {
             return Regex.IsMatch(value, @"^([a-fA-F0-9]{2})+$");

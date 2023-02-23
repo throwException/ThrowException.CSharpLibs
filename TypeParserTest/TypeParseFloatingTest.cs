@@ -156,5 +156,54 @@ namespace ThrowException.CSharpLibs.TypeParserTest
                 Assert.False(parser.CanParse("§"));
             }
         }
+
+        [Test()]
+        public void Format()
+        {
+            {
+                var parser = new TypeParserFloat();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("1", parser.Format(1.0f));
+                Assert.AreEqual("-1", parser.Format(-1.0f));
+                Assert.AreEqual("1.25", parser.Format(1.25f));
+                Assert.AreEqual("-1.25", parser.Format(-1.25f));
+            }
+
+            {
+                var parser = new TypeParserDouble();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("1", parser.Format(1.0d));
+                Assert.AreEqual("-1", parser.Format(-1.0d));
+                Assert.AreEqual("1.25", parser.Format(1.25d));
+                Assert.AreEqual("-1.25", parser.Format(-1.25d));
+            }
+
+            {
+                var parser = new TypeParserDecimal();
+                Assert.AreEqual("0", parser.Format(0));
+                Assert.AreEqual("1", parser.Format(1));
+                Assert.AreEqual("-1", parser.Format(-1));
+                Assert.AreEqual("100", parser.Format(100));
+                Assert.AreEqual("-100", parser.Format(-100));
+                Assert.AreEqual("1.0", parser.Format(1.0M));
+                Assert.AreEqual("-1.0", parser.Format(-1.0M));
+                Assert.AreEqual("1.25", parser.Format(1.25M));
+                Assert.AreEqual("-1.25", parser.Format(-1.25M));
+            }
+
+            {
+                Assert.AreEqual("-1.25", TypeParsers.Format(-1.25M));
+                Assert.AreEqual("-1.25", TypeParsers.Format(-1.25d));
+                Assert.AreEqual("-1.25", TypeParsers.Format(-1.25f));
+            }
+        }
     }
 }

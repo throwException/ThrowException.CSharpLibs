@@ -7,6 +7,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserTimeSpan : TypeParser<TimeSpan>
     {
+        public override string Format(TimeSpan value)
+        {
+            return value.ToString(@"d\.hh\:mm\:ss\.fffffff");
+        }
+
         private static bool TryParseTimeSpan(string value, out TimeSpan time)
         {
             var result = Regex.Match(value, @"^((?:[+\-])?[0-9]+(?:\.[0-9]+)?)([a-z]+)$");

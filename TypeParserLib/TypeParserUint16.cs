@@ -4,6 +4,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserUint16 : TypeParser<ushort>
     {
+        public override string Format(ushort value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return ushort.TryParse(value, out ushort dummy);

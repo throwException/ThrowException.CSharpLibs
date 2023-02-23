@@ -4,6 +4,11 @@ namespace ThrowException.CSharpLibs.TypeParserLib
 {
     public class TypeParserFloat : TypeParser<float>
     {
+        public override string Format(float value)
+        {
+            return value.ToString();
+        }
+
         public override bool CanParse(string value)
         {
             return float.TryParse(value, out float dummy);
