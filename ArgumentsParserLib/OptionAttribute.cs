@@ -21,6 +21,8 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
         public Type Parser { get; set; }
         public uint Positional { get; set; }
         public bool Required { get; set; }
+        public string ShortValueDescription { get; set; }
+        public string LongDescription { get; set; }
 
         public OptionAttribute(string longName)
         {

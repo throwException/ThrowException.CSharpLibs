@@ -13,7 +13,105 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
         protected PropertyInfo Property { get; private set; }
         protected OptionAttribute Attribute { get; private set; }
 
-        protected string DisplayName
+        public bool IsSame(OptionManager other)
+        {
+            return (Property.DeclaringType.FullName == other.Property.DeclaringType.FullName) &&
+                (Property.Name == other.Property.Name);
+        }
+
+        public virtual string LongDescription
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Attribute.LongDescription))
+                {
+                    return Attribute.LongDescription;
+                }
+                else if (!string.IsNullOrEmpty(Attribute.ShortValueDescription))
+                {
+                    return Attribute.ShortValueDescription;
+                }
+                else if (!string.IsNullOrEmpty(Attribute.LongName))
+                {
+                    return Attribute.LongName;
+                }
+                else if (Attribute.ShortName.HasValue)
+                {
+                    return Attribute.ShortName.Value.ToString();
+                }
+                else
+                {
+                    return "?";
+                }
+            }
+        }
+
+        public virtual string ValueShortDescription
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Attribute.ShortValueDescription))
+                {
+                    return Attribute.ShortValueDescription;
+                }
+                else if (!string.IsNullOrEmpty(Attribute.LongName))
+                {
+                    return Attribute.LongName;
+                }
+                else if (Attribute.ShortName.HasValue)
+                {
+                    return Attribute.ShortName.Value.ToString();
+                }
+                else
+                {
+                    return "?";
+                }
+            }
+        }
+
+        public string DisplayName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Attribute.LongName))
+                {
+                    return "--" + Attribute.LongName;
+                }
+                else if (Attribute.ShortName.HasValue)
+                {
+                    return "-" + Attribute.ShortName.Value.ToString();
+                }
+                else
+                {
+                    return "?";
+                }
+            }
+        }
+
+        public string FullName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Attribute.LongName) && Attribute.ShortName.HasValue)
+                {
+                    return "-" + Attribute.ShortName.Value.ToString() + " --" + Attribute.LongName;
+                }
+                else if (!string.IsNullOrEmpty(Attribute.LongName))
+                {
+                    return "   --" + Attribute.LongName;
+                }
+                else if (Attribute.ShortName.HasValue)
+                {
+                    return "-" + Attribute.ShortName.Value.ToString();
+                }
+                else
+                {
+                    return "?";
+                }
+            }
+        }
+
+        protected string DebugName
         { 
             get
             {
@@ -104,7 +202,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                     }
                     else
                     {
-                        throw new ArgumentsParserMisconfigurationException("{0}: Parser {1} not suitable for type {2}", DisplayName, Attribute.Parser.FullName, typeof(T).FullName);
+                        throw new ArgumentsParserMisconfigurationException("{0}: Parser {1} not suitable for type {2}", DebugName, Attribute.Parser.FullName, typeof(T).FullName);
                     }
                 }
             }
@@ -118,7 +216,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
             }
             catch (Exception exception)
             {
-                throw new ArgumentsParserMisconfigurationException("{0}: {1}", DisplayName, exception.Message);
+                throw new ArgumentsParserMisconfigurationException("{0}: {1}", DebugName, exception.Message);
             }
         }
     }

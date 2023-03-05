@@ -11,12 +11,15 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
         public string Verb { get; protected set; }
         public bool Default { get; protected set; }
         public abstract object Apply(ArgumentInstance arguments);
+        public abstract IEnumerable<OptionManager> Options { get; }
     }
 
     public class VerbManager<T> : VerbManager
         where T : new()
     {
         private readonly List<OptionManager> _options;
+
+        public override IEnumerable<OptionManager> Options => _options;
 
         private OptionManager CreateSettingManagerScalar(Type baseType, PropertyInfo property, OptionAttribute attribute)
         {

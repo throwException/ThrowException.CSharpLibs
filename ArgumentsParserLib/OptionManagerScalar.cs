@@ -33,13 +33,13 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                 {
                     if (!TryParse(stringValue, out _value))
                     {
-                        throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse default value", DisplayName);
+                        throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse default value", DebugName);
                     }
                     _type = OptionManagerValueType.Default;
                 }
                 else
                 {
-                    throw new ArgumentsParserMisconfigurationException("{0}: Default value cannot be assigned", DisplayName);
+                    throw new ArgumentsParserMisconfigurationException("{0}: Default value cannot be assigned", DebugName);
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
         public override void Add(OptionInstance option, bool config)
         {
             if (option.Values.Count() != 1)
-                throw new ArgumentsParseException("Cannot set multiple value for {0}", DisplayName);
+                throw new ArgumentsParseException("Cannot set multiple value for {0}", DebugName);
             var stringValue = option.Values.Single();
 
             switch (_type)
@@ -65,13 +65,13 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                     }
                     else
                     {
-                        throw new ArgumentsParseException("Duplicate option {0}", DisplayName);
+                        throw new ArgumentsParseException("Duplicate option {0}", DebugName);
                     }
                     break;
                 case OptionManagerValueType.CommandLine:
                     if (!config)
                     {
-                        throw new ArgumentsParseException("Duplicate option {0}", DisplayName);
+                        throw new ArgumentsParseException("Duplicate option {0}", DebugName);
                     }
                     /* ingore value from config */
                     break;
@@ -86,16 +86,16 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
             {
                 if (!TryParse(stringValue, out _value))
                 {
-                    throw new ArgumentsParseException("Cannot parse value '{0}' for option {1}", stringValue, DisplayName);
+                    throw new ArgumentsParseException("Cannot parse value '{0}' for option {1}", stringValue, DebugName);
                 }
             }
             catch (ArgumentsParseException exception)
             {
-                throw new ArgumentsParseException("{0} for option {1}", exception.Message, DisplayName);
+                throw new ArgumentsParseException("{0} for option {1}", exception.Message, DebugName);
             }
             catch (Exception exception)
             {
-                throw new ArgumentsParseException("{0} for option {1}", exception.Message, DisplayName);
+                throw new ArgumentsParseException("{0} for option {1}", exception.Message, DebugName);
             }
         }
 
@@ -105,7 +105,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
             {
                 if (Attribute.Required)
                 {
-                    throw new ArgumentsParseException("Required option {0} missing", DisplayName);
+                    throw new ArgumentsParseException("Required option {0} missing", DebugName);
                 }
             }
             else

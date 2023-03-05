@@ -38,13 +38,13 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                     {
                         if (!TryParse(stringValue, out T value))
                         {
-                            throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse value '{1}'", DisplayName, stringValue);
+                            throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse value '{1}'", DebugName, stringValue);
                         }
                         _values.Add(value);
                     }
                     catch (Exception exception)
                     {
-                        throw new ArgumentsParserMisconfigurationException("{0}: {1}", DisplayName, exception.Message);
+                        throw new ArgumentsParserMisconfigurationException("{0}: {1}", DebugName, exception.Message);
                     }
                     _type = OptionManagerValueType.Default;
                 }
@@ -56,20 +56,20 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                         {
                             if (!TryParse(oneStringValue, out T value))
                             {
-                                throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse value '{1}'", DisplayName, oneStringValue);
+                                throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse value '{1}'", DebugName, oneStringValue);
                             }
                             _values.Add(value);
                         }
                         catch (Exception exception)
                         {
-                            throw new ArgumentsParserMisconfigurationException("{0}: {1}", DisplayName, exception.Message);
+                            throw new ArgumentsParserMisconfigurationException("{0}: {1}", DebugName, exception.Message);
                         }
                     }
                     _type = OptionManagerValueType.Default;
                 }
                 else
                 {
-                    throw new ArgumentsParserMisconfigurationException("{0}: Default value cannot be assigned", DisplayName);
+                    throw new ArgumentsParserMisconfigurationException("{0}: Default value cannot be assigned", DebugName);
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                 {
                     if (!TryParse(stringValue, out T value))
                     {
-                        throw new ArgumentsParseException("Cannot parse value '{0}' for option {1}", stringValue, DisplayName);
+                        throw new ArgumentsParseException("Cannot parse value '{0}' for option {1}", stringValue, DebugName);
                     }
                     _values.Add(value);
                 }
@@ -125,7 +125,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                 }
                 catch (Exception exception)
                 {
-                    throw new ArgumentsParseException("{0} for option {1}", exception.Message, DisplayName);
+                    throw new ArgumentsParseException("{0} for option {1}", exception.Message, DebugName);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
             {
                 if (Attribute.Required)
                 {
-                    throw new ArgumentsParseException("Required option {0} missing", DisplayName);
+                    throw new ArgumentsParseException("Required option {0} missing", DebugName);
                 }
             }
             else

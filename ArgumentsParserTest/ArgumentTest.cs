@@ -10,32 +10,32 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
 {
     public class BaseOptions
     {
-        [Option('d', "debug", Type = OptionType.Flag, DefaultValue = true)]
+        [Option('d', "debug", Type = OptionType.Flag, DefaultValue = true, LongDescription = "Enables debug output")]
         public bool Debug { get; private set; }
 
-        [Option('v', "verbose", Type = OptionType.CountedFlag, DefaultValue = 0)]
+        [Option('v', "verbose", Type = OptionType.CountedFlag, DefaultValue = 0, LongDescription = "Enables more verbose output (add multiple times for further effect)")]
         public uint Verbose { get; private set; }
 
-        [Option('c', "config", Type = OptionType.IniConfigFile, Required = false)]
+        [Option('c', "config", Type = OptionType.IniConfigFile, Required = false, LongDescription = "Ini style config file with further options")]
         public string IniConfigFile { get; private set; }
 
-        [Option("xml", Type = OptionType.XmlConfigFile, Required = false)]
+        [Option("xml", Type = OptionType.XmlConfigFile, Required = false, LongDescription = "XML config file with further options.")]
         public string XmlConfigFile { get; private set; }
     }
 
     [Verb("test", true)]
     public class TestOptions : BaseOptions
     { 
-        [Option('n', "number")]
+        [Option('n', "number", LongDescription = "The number")]
         public int Number { get; private set; }
 
-        [Option("name")]
+        [Option("name", LongDescription = "Name of the subject")]
         public string Name { get; private set; }
 
-        [Option("file", Parser = typeof(TypeParserFilename))]
+        [Option("file", Parser = typeof(TypeParserFilename), LongDescription = "Input file")]
         public string File { get; private set; }
 
-        [Option("data")]
+        [Option("data", LongDescription = "Additional data")]
         public byte[] Data { get; private set; }
     }
 
@@ -50,10 +50,10 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
     [Verb("pong")]
     public class PongOptions : BaseOptions
     {
-        [Option('x', "xray", DefaultValue = 27)]
+        [Option('x', "xray", DefaultValue = 27, LongDescription = "X-Ray strength; default value: 27")]
         public int Xray { get; private set; }
 
-        [Option("command")]
+        [Option("command", LongDescription = "Issued command")]
         public string Command { get; private set; }
 
         [Option("machine")]
@@ -62,7 +62,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
         [Option("height")]
         public double Height { get; private set; }
 
-        [Option("width", Positional = 1)]
+        [Option("width", Positional = 1, ShortValueDescription = "width of stuff", LongDescription = "Width of important stuff")]
         public double Width { get; private set; }
     }
 
@@ -72,10 +72,10 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
         [Option("things")]
         public IEnumerable<string> Things { get; private set; }
 
-        [Option("factor", Positional = 1)]
+        [Option("factor", Positional = 1, ShortValueDescription = "factor to apply")]
         public decimal Factor { get; private set; }
 
-        [Option("coefficients", Positional = 2)]
+        [Option("coefficients", Positional = 2, ShortValueDescription = "list of coefficents")]
         public IEnumerable<decimal> Coefficients { get; private set; }
     }
 
@@ -152,6 +152,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
             const string commandLine = "-d -vvv --things t1 t2 --things t3 --things t4 t5 t6 -- clonk 1.3 2.5 2.6 2.75";
 
             Parser.Create<TestOptions, PongOptions, ClonkOptions>()
+                .LongUsage()
                 .Parse(commandLine)
                 .With<TestOptions>(t =>
                 {

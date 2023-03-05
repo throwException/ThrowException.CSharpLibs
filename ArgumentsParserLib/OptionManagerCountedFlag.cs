@@ -35,18 +35,18 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
                     {
                         if (!TypeParsers.TryParse<uint>(stringValue, out _value))
                         {
-                            throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse value '{1}'", DisplayName, stringValue);
+                            throw new ArgumentsParserMisconfigurationException("{0}: Cannot parse value '{1}'", DebugName, stringValue);
                         }
                     }
                     catch (Exception exception)
                     {
-                        throw new ArgumentsParserMisconfigurationException("{0}: {1}", DisplayName, exception.Message);
+                        throw new ArgumentsParserMisconfigurationException("{0}: {1}", DebugName, exception.Message);
                     }
                     _type = OptionManagerValueType.Default;
                 }
                 else
                 {
-                    throw new ArgumentsParserMisconfigurationException("{0}: Default value cannot be assigned", DisplayName);
+                    throw new ArgumentsParserMisconfigurationException("{0}: Default value cannot be assigned", DebugName);
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
             }
             else
             {
-                throw new ArgumentsParseException("Cannot set value for flag {0}", DisplayName);
+                throw new ArgumentsParseException("Cannot set value for flag {0}", DebugName);
             }
         }
 

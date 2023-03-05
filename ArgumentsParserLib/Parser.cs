@@ -1,9 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace ThrowException.CSharpLibs.ArgumentsParserLib
 {
+    public enum ErrorAction
+    { 
+        Throw,
+        ShortUsage,
+        LongUsage,
+    }
+
     public class Parser
     {
         public static Parser Create<T>()
@@ -35,8 +44,13 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
         private readonly VerbManager _default;
         private object _result;
 
+        public ErrorAction MissingVerbAction { get; set; }
+        public ErrorAction ParseExceptionAction { get; set; }
+
         public Parser(params Type[] verbTypes)
         {
+            MissingVerbAction = ErrorAction.Throw;
+            ParseExceptionAction = ErrorAction.Throw;
             _managers = new Dictionary<string, VerbManager>();
 
             foreach (var verbType in verbTypes)
@@ -72,77 +86,131 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
 
         public Parser Parse(string[] args)
         {
-            var optionParser = new OptionParser();
-            var options = optionParser.Parse(args);
-
-            if (options.Positionals.Any())
+            try
             {
-                var possibleVerb = options.Positionals.First();
+                var optionParser = new OptionParser();
+                var options = optionParser.Parse(args);
 
-                if (_managers.ContainsKey(possibleVerb))
+                if (options.Positionals.Any())
                 {
-                    options.RemoveVerb();
-                    _result = _managers[possibleVerb].Apply(options);
-                }
-                else if (_default != null)
-                {
-                    _result = _default.Apply(options);
+                    var possibleVerb = options.Positionals.First();
+
+                    if (_managers.ContainsKey(possibleVerb))
+                    {
+                        options.RemoveVerb();
+                        _result = _managers[possibleVerb].Apply(options);
+                    }
+                    else if (_default != null)
+                    {
+                        _result = _default.Apply(options);
+                    }
+                    else if (possibleVerb == "help")
+                    {
+                        LongUsage();
+                    }
+                    else
+                    {
+                        MissingVerb();
+                    }
                 }
                 else
                 {
-                    throw new ArgumentsParseException("No verb specified");
+                    if (_default != null)
+                    {
+                        _result = _default.Apply(options);
+                    }
+                    else
+                    {
+                        MissingVerb();
+                    }
                 }
+                return this;
             }
-            else
+            catch (ArgumentsParseException exception)
             {
-                if (_default != null)
-                {
-                    _result = _default.Apply(options);
-                }
-                else
-                {
-                    throw new ArgumentsParseException("No verb specified");
-                }
+                HandleException(exception);
+                return this;
             }
-            return this;
+        }
+
+        private void HandleException(ArgumentsParseException exception)
+        { 
+            switch (ParseExceptionAction)
+            {
+                case ErrorAction.Throw:
+                    throw exception;
+                case ErrorAction.ShortUsage:
+                    ShortUsage();
+                    break;
+                case ErrorAction.LongUsage:
+                    LongUsage();
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private void MissingVerb()
+        {
+            switch (MissingVerbAction)
+            {
+                case ErrorAction.Throw:
+                    throw new ArgumentsParseException("No verb specified");
+                case ErrorAction.ShortUsage:
+                    ShortUsage();
+                    break;
+                case ErrorAction.LongUsage:
+                    LongUsage();
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         public Parser Parse(string commandLine)
         {
-            var preParser = new PreParser();
-            var optionParser = new OptionParser();
-            var options = optionParser.Parse(preParser.Parse(commandLine));
-
-            if (options.Positionals.Any())
+            try
             {
-                var possibleVerb = options.Positionals.First();
+                var preParser = new PreParser();
+                var optionParser = new OptionParser();
+                var options = optionParser.Parse(preParser.Parse(commandLine));
 
-                if (_managers.ContainsKey(possibleVerb))
+                if (options.Positionals.Any())
                 {
-                    options.RemoveVerb();
-                   _result = _managers[possibleVerb].Apply(options);
-                }
-                else if (_default != null)
-                {
-                    _result = _default.Apply(options);
-                }
-                else
-                {
-                    throw new ArgumentsParseException("No verb specified");
-                }
-            }
-            else
-            { 
-                if (_default != null)
-                {
-                    _result = _default.Apply(options);
+                    var possibleVerb = options.Positionals.First();
+
+                    if (_managers.ContainsKey(possibleVerb))
+                    {
+                        options.RemoveVerb();
+                        _result = _managers[possibleVerb].Apply(options);
+                    }
+                    else if (_default != null)
+                    {
+                        _result = _default.Apply(options);
+                    }
+                    else
+                    {
+                        MissingVerb();
+                    }
                 }
                 else
                 {
-                    throw new ArgumentsParseException("No verb specified");
+                    if (_default != null)
+                    {
+                        _result = _default.Apply(options);
+                    }
+                    else
+                    {
+                        MissingVerb();
+                    }
                 }
+                return this;
             }
-            return this;
+            catch (ArgumentsParseException exception)
+            {
+                HandleException(exception);
+                return this;
+            }
         }
 
         public Parser With<T>(Action<T> action)
@@ -151,6 +219,85 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
             {
                 action(options);
             }
+            return this;
+        }
+
+        public Parser ShortUsage()
+        {
+            var assembly = Assembly.GetEntryAssembly();
+            var executableName = 
+                assembly == null ? "exe" : 
+                Path.GetFileName(Assembly.GetEntryAssembly().GetName().CodeBase);
+            var prefix = "usage: " + executableName + " ";
+            var addPrefix = true;
+            var indent = string.Join("", prefix.Select(c => " "));
+
+            foreach (var manager in _managers.Values)
+            {
+                var line = manager.Verb;
+                foreach (var option in manager.Options)
+                {
+                    if (option.Positional > 0)
+                    {
+                        line += " <" + option.ValueShortDescription + ">";
+                    }
+                }
+
+                if (addPrefix)
+                {
+                    Console.WriteLine(prefix + line);
+                    addPrefix = false;
+                }
+                else
+                {
+                    Console.WriteLine(indent + line);
+                }
+            }
+            return this;
+        }
+
+        public Parser LongUsage()
+        {
+            ShortUsage();
+
+            int maxOptionNameWidth = _managers.Values.Max(m => m.Options.Max(o => o.FullName.Length));
+
+            var commonOptions = _managers.Values.First().Options.ToList();
+
+            foreach (var manager in _managers.Values)
+            {
+                commonOptions.RemoveAll(o => !manager.Options.Any(o.IsSame));
+            }
+
+            if (commonOptions.Any())
+            {
+                Console.WriteLine();
+                Console.WriteLine("Common options:");
+                foreach (var option in commonOptions)
+                {
+                    Console.WriteLine("  " + option.FullName.PadRight(maxOptionNameWidth) + "  " + option.LongDescription);
+                }
+            }
+
+            foreach (var manager in _managers.Values)
+            {
+                var uncommonOptions = manager.Options
+                    .Where(x => !commonOptions.Any(x.IsSame)).ToList();
+
+                if (uncommonOptions.Any())
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Options for " + manager.Verb + ":");
+
+                    foreach (var option in uncommonOptions)
+                    {
+                        Console.WriteLine("  " + option.FullName.PadRight(maxOptionNameWidth) + "  " + option.LongDescription);
+                    }
+                }
+            }
+
+            Console.WriteLine();
+
             return this;
         }
     }
