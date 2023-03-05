@@ -13,6 +13,8 @@ namespace ThrowException.CSharpLibs.BytesUtilTest
         {
             using (var serializer = new Serializer())
             {
+                serializer.Write(true);
+                serializer.Write(false);
                 serializer.Write(23);
                 serializer.Write(TimeSpan.FromHours(2.7d));
                 serializer.Write(long.MaxValue);
@@ -21,6 +23,8 @@ namespace ThrowException.CSharpLibs.BytesUtilTest
                 serializer.WritePrefixed(new byte[] { 0x13, 0x37 });
                 using (var deserializer = new Deserializer(serializer.Data))
                 {
+                    Assert.True(deserializer.ReadBool());
+                    Assert.False(deserializer.ReadBool());
                     Assert.AreEqual(deserializer.ReadInt32(), 23);
                     Assert.AreEqual(deserializer.ReadTimeSpan(), TimeSpan.FromHours(2.7d));
                     Assert.AreEqual(deserializer.ReadInt64(), long.MaxValue);
