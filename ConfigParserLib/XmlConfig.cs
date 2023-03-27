@@ -15,12 +15,15 @@ namespace ThrowException.CSharpLibs.ConfigParserLib
 
         public T Parse(string xmlData)
         {
-            return Parse(XDocument.Parse(xmlData));
+            return Parse(Encoding.UTF8.GetBytes(xmlData));
         }
 
         public T Parse(byte[] xmlData)
         {
-            return Parse(Encoding.UTF8.GetString(xmlData));
+            using (var stream = new MemoryStream(xmlData))
+            {
+                return Parse(XDocument.Load(stream));
+            }
         }
 
         public T Parse(XDocument document)

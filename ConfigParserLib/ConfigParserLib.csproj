@@ -10,7 +10,7 @@
     <AssemblyName>ThrowException.CSharpLibs.ConfigParserLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PackageId>ThrowException.CSharpLibs.ConfigParserLib</PackageId>
-    <PackageVersion>1.1.0</PackageVersion>
+    <PackageVersion>1.1.1</PackageVersion>
     <Authors>Stefan Thöni</Authors>
     <Owners>Stefan Thöni</Owners>
     <Summary>Parses config files.</Summary>
