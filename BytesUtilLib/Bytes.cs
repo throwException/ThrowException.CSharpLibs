@@ -447,5 +447,73 @@ namespace ThrowException.CSharpLibs.BytesUtilLib
                 return memory.ToArray();
             }
         }
+
+        public static byte[] Random(int count)
+        {
+            using (var random = RandomNumberGenerator.Create())
+            {
+                var buffer = new byte[count];
+                random.GetBytes(buffer);
+                return buffer;
+            }
+        }
+
+        public static string FormatBytes(this long bytes)
+        { 
+            if (bytes >= 1024L * 1024L * 1024L * 1024L)
+            {
+                return string.Format("{0:0.00} TiB", bytes / (1024d * 1024d * 1024d * 1024d));
+            }
+            else if (bytes >= 1024L * 1024L * 1024L)
+            {
+                return string.Format("{0:0.00} GiB", bytes / (1024d * 1024d * 1024d));
+            }
+            else if (bytes >= 1024L * 1024L)
+            {
+                return string.Format("{0:0.00} MiB", bytes / (1024d * 1024d));
+            }
+            else if (bytes >= 1024L)
+            {
+                return string.Format("{0:0.0} KiB", bytes / 1024d);
+            }
+            else
+            {
+                return bytes + " Bytes";
+            }
+        }
+
+        public static string FormatBytesOf(this long bytes, long total)
+        {
+            long max = Math.Max(bytes, total);
+
+            if (max >= 1024L * 1024L * 1024L * 1024L)
+            {
+                return string.Format("{0:0.00} / {1:0.00} TiB", 
+                    bytes / (1024d * 1024d * 1024d * 1024d),
+                    total / (1024d * 1024d * 1024d * 1024d));
+            }
+            else if (max >= 1024L * 1024L * 1024L)
+            {
+                return string.Format("{0:0.00} / {1:0.00} GiB",
+                    bytes / (1024d * 1024d * 1024d),
+                    total / (1024d * 1024d * 1024d));
+            }
+            else if (max >= 1024L * 1024L)
+            {
+                return string.Format("{0:0.00} / {1:0.00} MiB",
+                    bytes / (1024d * 1024d),
+                    total / (1024d * 1024d));
+            }
+            else if (max >= 1024L)
+            {
+                return string.Format("{0:0.0} / {1:0.0} KiB",
+                    bytes / 1024d,
+                    total / 1024d);
+            }
+            else
+            {
+                return bytes + " / " + total + " Bytes";
+            }
+        }
     }
 }

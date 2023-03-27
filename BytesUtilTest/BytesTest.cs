@@ -242,5 +242,40 @@ namespace ThrowException.CSharpLibs.BytesUtilTest
 
             Assert.Throws<ArgumentNullException>(() => ((byte[])null).Zeroize());
         }
+
+        [Test()]
+        public void FormatBytes()
+        {
+            Assert.AreEqual(0L.FormatBytes(), "0 Bytes");
+            Assert.AreEqual(23L.FormatBytes(), "23 Bytes");
+            Assert.AreEqual(1023L.FormatBytes(), "1023 Bytes");
+            Assert.AreEqual(1024L.FormatBytes(), "1.0 KiB");
+            Assert.AreEqual((1024L * 3).FormatBytes(), "3.0 KiB");
+            Assert.AreEqual((1024L * 3 + 512).FormatBytes(), "3.5 KiB");
+            Assert.AreEqual((1024L * 1024L).FormatBytes(), "1.00 MiB");
+            Assert.AreEqual((1024L * 1024L * 3).FormatBytes(), "3.00 MiB");
+            Assert.AreEqual((1024L * 1024L * 3 + 1024 * 512).FormatBytes(), "3.50 MiB");
+            Assert.AreEqual((1024L * 1024L * 1024L).FormatBytes(), "1.00 GiB");
+            Assert.AreEqual((1024L * 1024L * 1024L * 1024L).FormatBytes(), "1.00 TiB");
+        }
+
+        [Test()]
+        public void FormatBytesOf()
+        {
+            Assert.AreEqual(0L.FormatBytesOf(0L), "0 / 0 Bytes");
+            Assert.AreEqual(0L.FormatBytesOf(23L), "0 / 23 Bytes");
+            Assert.AreEqual(0L.FormatBytesOf(1023L), "0 / 1023 Bytes");
+            Assert.AreEqual(0L.FormatBytesOf(1024L), "0.0 / 1.0 KiB");
+            Assert.AreEqual(1024L.FormatBytesOf(1024L), "1.0 / 1.0 KiB");
+            Assert.AreEqual(0L.FormatBytesOf(1024L * 5L), "0.0 / 5.0 KiB");
+            Assert.AreEqual((1024L * 2L).FormatBytesOf(1024L * 5L), "2.0 / 5.0 KiB");
+            Assert.AreEqual(1L.FormatBytesOf(1024L * 1024L * 5L), "0.00 / 5.00 MiB");
+            Assert.AreEqual(3L.FormatBytesOf(1024L * 1024L * 5L), "0.00 / 5.00 MiB");
+            Assert.AreEqual((1024L * 1024L).FormatBytesOf(1024L * 1024L * 5L), "1.00 / 5.00 MiB");
+            Assert.AreEqual(1024L.FormatBytesOf(1024L * 1024L * 1024L * 5L), "0.00 / 5.00 GiB");
+            Assert.AreEqual(1337L.FormatBytesOf(1024L * 1024L * 1024L * 5L), "0.00 / 5.00 GiB");
+            Assert.AreEqual((1024L * 1024L * 1024L * 4L).FormatBytesOf(1024L * 1024L * 1024L * 5L), "4.00 / 5.00 GiB");
+            Assert.AreEqual(1337L.FormatBytesOf(1024L * 1024L * 1024L * 1024L * 5L), "0.00 / 5.00 TiB");
+        }
     }
 }

@@ -10,7 +10,7 @@
     <AssemblyName>ThrowException.CSharpLibs.BytesUtilLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PackageId>ThrowException.CSharpLibs.BytesUtilLib</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <Authors>Stefan Thöni</Authors>
     <Owners>Stefan Thöni</Owners>
     <Summary>A library providing simple functions to work with byte arrays.</Summary>
@@ -48,6 +48,7 @@
     <Compile Include="LittleConverter.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="Arguments.cs" />
+    <Compile Include="SpeedCounter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

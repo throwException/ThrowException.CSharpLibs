@@ -38,6 +38,7 @@
     <Compile Include="SerializerTest.cs" />
     <Compile Include="DeserializerTest.cs" />
     <Compile Include="SerializerDeserializerTest.cs" />
+    <Compile Include="SpeedCounterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
