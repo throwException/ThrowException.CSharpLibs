@@ -4,29 +4,30 @@ using System.Text;
 
 namespace ThrowException.CSharpLibs.PipelineLib
 {
-    public class ShortOutput : Output
+    public class FileOutput : Output
     {
-        private readonly MemoryStream _stream;
+        private readonly Stream _stream;
 
-        public ShortOutput(Stage source) : base(source)
+        public FileOutput(Stage source, string filename) : base(source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            _stream = new MemoryStream();
+            _stream = File.OpenWrite(filename);
         }
 
         public override string Text
         {
-            get { return Encoding.UTF8.GetString(Data); }
+            get { return string.Empty; }
         }
 
         public override byte[] Data
         {
-            get { return _stream.ToArray(); }
+            get { return new byte[0]; }
         }
 
         protected override void Close()
         {
+            _stream.Close();
         }
 
         protected override void ProcessBytes(byte[] buffer, int count)

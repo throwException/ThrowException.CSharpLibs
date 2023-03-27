@@ -4,7 +4,7 @@ using ThrowException.CSharpLibs.BytesUtilLib;
 
 namespace ThrowException.CSharpLibs.PipelineLib
 {
-    public abstract class Output
+    public abstract class Output : IDisposable
     {
         private readonly Stage _source;
         private Thread _processor;
@@ -54,6 +54,13 @@ namespace ThrowException.CSharpLibs.PipelineLib
                 }
             }
         }
+
+        public void Dispose()
+        {
+            Close();
+        }
+
+        protected abstract void Close();
 
         public abstract string Text { get; }
 

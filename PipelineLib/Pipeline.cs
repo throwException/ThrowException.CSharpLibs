@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace ThrowException.CSharpLibs.PipelineLib
 {
-    public class Pipeline
+    public class Pipeline : IDisposable
     {
         private readonly List<Stage> _stages;
         private readonly List<StageConnection> _connections;
@@ -131,6 +131,16 @@ namespace ThrowException.CSharpLibs.PipelineLib
             }
 
             Output.WaitForDone();
+        }
+
+        public void Dispose()
+        {
+            foreach (var stage in _stages)
+            {
+                stage.Dispose();
+            }
+
+            Output.Dispose();
         }
 
         public IEnumerable<string> Messages

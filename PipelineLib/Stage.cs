@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ThrowException.CSharpLibs.PipelineLib
 {
-    public abstract class Stage
+    public abstract class Stage : IDisposable
     {
         public string Label { get; protected set; }
         public abstract Stream Input { get; }
@@ -15,6 +15,11 @@ namespace ThrowException.CSharpLibs.PipelineLib
         public abstract bool Done { get; }
         public abstract bool Failed { get; }
         public abstract void Start();
+
+        public void Dispose()
+        {
+        }
+
         public abstract IEnumerable<string> Messages { get; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
+using ThrowException.CSharpLibs.BytesUtilLib;
 using ThrowException.CSharpLibs.PipelineLib;
 
 namespace ThrowException.CSharpLibs.PipelineTest
@@ -239,6 +241,39 @@ namespace ThrowException.CSharpLibs.PipelineTest
             pipeline.WaitForDone();
             Assert.True(pipeline.Done, "Done is not true");
             Assert.True(pipeline.Failed, "Failed is not true");
+        }
+
+        [Test()]
+        public void FileTest()
+        {
+            var filename = "/tmp/" + Bytes.Random(16).ToHexString();
+
+            using (var pipeline = new Pipeline())
+            {
+                pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
+                pipeline.Add(new EncryptStage(OpensslCipher.Chacha20, "cafebabe", false), true);
+                pipeline.Add(s => new FileOutput(s, filename));
+                pipeline.Start();
+                pipeline.WaitForDone();
+                Assert.True(pipeline.Done, "Done is not true");
+                Assert.False(pipeline.Failed, "Failed is not false");
+                Assert.AreEqual(pipeline.TotalBytes, 16 * 1024 * 1024, "Total bytes do not match");
+            }
+
+            using (var pipeline = new Pipeline())
+            {
+                pipeline.Add(new DumpStage(filename));
+                pipeline.Add(new EncryptStage(OpensslCipher.Chacha20, "cafebabe", true), true);
+                pipeline.Add(s => new ShortOutput(s));
+                pipeline.Start();
+                pipeline.WaitForDone();
+                Assert.True(pipeline.Done, "Done is not true");
+                Assert.False(pipeline.Failed, "Failed is not false");
+                Assert.AreEqual(pipeline.Output.Data.Length, 16 * 1024 * 1024, "Output data length does not match");
+                Assert.True(pipeline.Output.Data.All(x => x == 0), "Output data is not zero");
+            }
+
+            File.Delete(filename);
         }
     }
 }

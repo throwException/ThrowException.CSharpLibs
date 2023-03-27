@@ -49,6 +49,8 @@
     <Compile Include="InputStage.cs" />
     <Compile Include="BlockdeltaCreateStage.cs" />
     <Compile Include="BlockdeltaApplyStage.cs" />
+    <Compile Include="DumpStage.cs" />
+    <Compile Include="FileOutput.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BytesUtilLib\BytesUtilLib.csproj">
