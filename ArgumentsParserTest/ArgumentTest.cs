@@ -79,6 +79,11 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
         public IEnumerable<decimal> Coefficients { get; private set; }
     }
 
+    [Verb("null")]
+    public class NullOptions
+    {
+    }
+
     [TestFixture()]
     public class ArgumentTest
     {
@@ -201,6 +206,14 @@ namespace ThrowException.CSharpLibs.ArgumentsParserTest
                 Parser.Create<TestOptions, PongOptions, ClonkOptions>()
                     .Parse(commandLine);
             });
+        }
+
+        [Test]
+        public static void LongUsageTest()
+        {
+            Parser.Create<TestOptions, PongOptions, ClonkOptions>().LongUsage();
+            Parser.Create<NullOptions, PongOptions, ClonkOptions>().LongUsage();
+            Parser.Create<NullOptions>().LongUsage();
         }
     }
 }

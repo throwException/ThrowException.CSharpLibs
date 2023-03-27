@@ -10,7 +10,7 @@
     <AssemblyName>ThrowException.CSharpLibs.ArgumentsParserLib</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PackageId>ThrowException.CSharpLibs.ArgumentsParserLib</PackageId>
-    <PackageVersion>1.1.1</PackageVersion>
+    <PackageVersion>1.1.4</PackageVersion>
     <Authors>Stefan Thöni</Authors>
     <Description>A library for parsing command line arguments.</Description>
     <Owners>Stefan Thöni</Owners>

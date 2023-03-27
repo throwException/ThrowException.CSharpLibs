@@ -260,9 +260,8 @@ namespace ThrowException.CSharpLibs.ArgumentsParserLib
         {
             ShortUsage();
 
-            int maxOptionNameWidth = _managers.Values.Max(m => m.Options.Max(o => o.FullName.Length));
-
-            var commonOptions = _managers.Values.First().Options.ToList();
+            int maxOptionNameWidth = _managers.Any() ? _managers.Values.Max(m => m.Options.Any() ? m.Options.Max(o => o.FullName.Length) : 0) : 1;
+            var commonOptions = _managers.Any() ? _managers.Values.First().Options.ToList() : new List<OptionManager>();
 
             foreach (var manager in _managers.Values)
             {
