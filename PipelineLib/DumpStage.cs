@@ -14,6 +14,11 @@ namespace ThrowException.CSharpLibs.PipelineLib
             _file = File.OpenRead(filename);
         }
 
+        public override void Close()
+        {
+            _file.Close();
+        }
+
         public override Stream Input => throw new NotImplementedException();
 
         public override Stream Output => _file;

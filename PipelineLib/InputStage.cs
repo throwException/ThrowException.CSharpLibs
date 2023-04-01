@@ -15,6 +15,11 @@ namespace ThrowException.CSharpLibs.PipelineLib
             _stream = new MemoryStream(data);
         }
 
+        public override void Close()
+        {
+            _stream.Close();
+        }
+
         public InputStage(string value)
             : this(Encoding.UTF8.GetBytes(value))
         { 

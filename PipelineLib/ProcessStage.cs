@@ -123,5 +123,9 @@ namespace ThrowException.CSharpLibs.PipelineLib
             _process.WaitForExit();
             _stderrReader.Join();
         }
+
+        public override void Close()
+        {
+        }
     }
 }

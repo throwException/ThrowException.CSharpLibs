@@ -140,7 +140,7 @@ namespace ThrowException.CSharpLibs.PipelineLib
                 stage.Dispose();
             }
 
-            Output.Dispose();
+            Output?.Dispose();
         }
 
         public IEnumerable<string> Messages

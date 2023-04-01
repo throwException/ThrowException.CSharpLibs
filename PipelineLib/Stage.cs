@@ -15,9 +15,11 @@ namespace ThrowException.CSharpLibs.PipelineLib
         public abstract bool Done { get; }
         public abstract bool Failed { get; }
         public abstract void Start();
+        public abstract void Close();
 
         public void Dispose()
         {
+            Close();
         }
 
         public abstract IEnumerable<string> Messages { get; }
