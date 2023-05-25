@@ -132,6 +132,8 @@ namespace ThrowException.CSharpLibs.LogLib
                 _logWriter.Flush();
             }
 
+            AdditionalWrite(entry);
+
             return entry;
         }
 
@@ -145,6 +147,15 @@ namespace ThrowException.CSharpLibs.LogLib
         {
             Error(exception.Message);
             Debug(exception.StackTrace);
+        }
+
+        public void Log(LogSeverity severity, string text, params object[] arguments)
+        {
+            Write(severity, text, arguments);
+        }
+
+        protected virtual void AdditionalWrite(LogEntry entry)
+        { 
         }
     }
 }

@@ -4,13 +4,14 @@ namespace ThrowException.CSharpLibs.LogLib
 {
     public enum LogSeverity
     {
-        Verbose = 0,
-        Debug = 1,
-        Info = 2,
-        Notice = 3,
-        Warning = 4,
-        Error = 5,
-        Critical = 6,
-        None = 7,
+        All = 0,
+        Verbose = 1,
+        Debug = 2,
+        Info = 3,
+        Notice = 4,
+        Warning = 5,
+        Error = 6,
+        Critical = 7,
+        None = 8,
     }
 }

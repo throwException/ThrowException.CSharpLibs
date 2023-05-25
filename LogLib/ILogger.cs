@@ -13,5 +13,6 @@ namespace ThrowException.CSharpLibs.LogLib
         void Notice(string text, params object[] arguments);
         void Verbose(string text, params object[] arguments);
         void Warning(string text, params object[] arguments);
+        void Log(LogSeverity severity, string text, params object[] arguments);
     }
 }
