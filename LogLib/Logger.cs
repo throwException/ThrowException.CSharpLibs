@@ -21,6 +21,8 @@ namespace ThrowException.CSharpLibs.LogLib
 
         public string LogFilePrefix { get; private set; }
 
+        public List<ILogger> SubLoggers { get; private set; }
+
         public void EnableLogFile(LogSeverity severity, string logFilePrefix)
         {
             LogFilePrefix = logFilePrefix;
@@ -32,6 +34,7 @@ namespace ThrowException.CSharpLibs.LogLib
             ConsoleSeverity = LogSeverity.Info;
             FileSeverity = LogSeverity.None;
             LogFilePrefix = null;
+            SubLoggers = new List<ILogger>();
         }
 
         public void Dispose()
@@ -111,6 +114,11 @@ namespace ThrowException.CSharpLibs.LogLib
                     {
                         yield return WriteLine(severity, trimmedLine);
                     }
+                }
+
+                foreach (var sub in SubLoggers)
+                {
+                    sub.Log(severity, text, arguments);
                 }
             }
         }

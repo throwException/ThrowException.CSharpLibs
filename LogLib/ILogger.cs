@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ThrowException.CSharpLibs.LogLib
 {
@@ -14,5 +15,6 @@ namespace ThrowException.CSharpLibs.LogLib
         void Verbose(string text, params object[] arguments);
         void Warning(string text, params object[] arguments);
         void Log(LogSeverity severity, string text, params object[] arguments);
+        List<ILogger> SubLoggers { get; }
     }
 }
