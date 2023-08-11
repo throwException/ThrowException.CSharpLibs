@@ -23,6 +23,8 @@ namespace ThrowException.CSharpLibs.LogLib
 
         public List<ILogger> SubLoggers { get; private set; }
 
+        public TimeSpan KeepLogFiles { get; set; } = TimeSpan.FromDays(5);
+
         public void EnableLogFile(LogSeverity severity, string logFilePrefix)
         {
             LogFilePrefix = logFilePrefix;
@@ -46,10 +48,58 @@ namespace ThrowException.CSharpLibs.LogLib
             }
         }
 
+        private void CreateLogDir()
+        {
+            if (LogFilePrefix.EndsWith(Path.PathSeparator.ToString(), StringComparison.Ordinal))
+            {
+                CreateDir(LogFilePrefix.Substring(0, LogFilePrefix.Length - 1));
+            }
+            else
+            {
+                CreateDir(Path.GetDirectoryName(LogFilePrefix));
+            }
+        }
+
+        private void CreateDir(string path)
+        {
+            if (path != Path.GetPathRoot(path))
+            {
+                CreateDir(Path.GetDirectoryName(path));
+            }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+
+        private void RemoveOldLogFiles()
+        {
+            if (LogFilePrefix.EndsWith(Path.PathSeparator.ToString(), StringComparison.Ordinal))
+            {
+                RemoveOldLogFiles(new DirectoryInfo(LogFilePrefix.Substring(LogFilePrefix.Length - 1)), "*");
+            }
+            else
+            {
+                RemoveOldLogFiles(new DirectoryInfo(Path.GetDirectoryName(LogFilePrefix)), Path.GetFileName(LogFilePrefix));
+            }
+        }
+
+        private void RemoveOldLogFiles(DirectoryInfo directory, string pattern)
+        {
+            foreach (var file in directory.GetFiles(pattern))
+            { 
+                if (file.LastWriteTime < DateTime.Now.Subtract(KeepLogFiles))
+                {
+                    file.Delete();
+                }
+            }
+        }
+
         private void CheckLogFile()
         {
             if (_logFile == null)
             {
+                CreateLogDir();
                 _logFileDate = DateTime.Now;
 				var filePath = string.Format("{0}_{1}.log", LogFilePrefix, _logFileDate.ToString("yyyy-MM-dd-HH-mm-ss"));
                 _logFile = File.OpenWrite(filePath);
