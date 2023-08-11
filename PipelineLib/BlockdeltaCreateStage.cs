@@ -13,8 +13,8 @@ namespace ThrowException.CSharpLibs.PipelineLib
                 blockDestination);
         }
 
-        public BlockdeltaCreateStage(string blockSource, string blockDestination)
-            : base("blockdelta-create", Software.BlockdeltaPath, ConstructArguments(blockSource, blockDestination))
+        public BlockdeltaCreateStage(IConfig config, string blockSource, string blockDestination)
+            : base("blockdelta-create", config.BlockdeltaPath, ConstructArguments(blockSource, blockDestination))
         {
         }
     }

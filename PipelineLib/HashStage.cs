@@ -5,8 +5,8 @@ namespace ThrowException.CSharpLibs.PipelineLib
 {
     public class HashStage : ProcessStage
     {
-        public HashStage(OpensslHash hash )
-            : base("openssl-enc", Software.OpensslPath, "{0} -binary", hash.OpensslString())
+        public HashStage(IConfig config, OpensslHash hash)
+            : base("openssl-enc", config.OpensslPath, "{0} -binary", hash.OpensslString())
         {
         }
     }

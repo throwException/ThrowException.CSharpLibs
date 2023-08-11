@@ -15,7 +15,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new HashStage(OpensslHash.SHA256), true);
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256), true);
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -44,7 +44,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "quarkquarkquark"));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -71,7 +71,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
             pipeline.Add(new ProcessStage("openssl", "/usr/bin/openssl", "aes-256-cbc -K 0000000000000000000000000000000000000000000000000000000000000000 -iv 00000000000000000000000000000000"), true);
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -87,7 +87,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=256"));
             pipeline.Add(new ProcessStage("openssl", "/usr/bin/openssl", "aes-256-cbc -K 0000000000000000000000000000000000000000000000000000000000000000 -iv 00000000000000000000000000000000"), true);
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -103,7 +103,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16 xxxxxxxxxxx"));
             pipeline.Add(new ProcessStage("openssl", "/usr/bin/openssl", "aes-256-cbc -K 0000000000000000000000000000000000000000000000000000000000000000 -iv 00000000000000000000000000000000"));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -117,7 +117,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
             pipeline.Add(new ProcessStage("openssl", "/usr/bin/openssl", "aes-256-cbc qqqqqqqqqqqqq -K 0000000000000000000000000000000000000000000000000000000000000000 -iv 00000000000000000000000000000000"));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -144,11 +144,11 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new GzipStage(false), true);
+            pipeline.Add(new GzipStage(new TestConfig(), false), true);
             pipeline.Add(new ProcessStage("cat", "/usr/bin/cat", string.Empty));
-            pipeline.Add(new GzipStage(true));
+            pipeline.Add(new GzipStage(new TestConfig(), true));
             pipeline.Add(new ProcessStage("openssl", "/usr/bin/openssl", "aes-256-cbc -K 0000000000000000000000000000000000000000000000000000000000000000 -iv 00000000000000000000000000000000"));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -163,14 +163,14 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new GzipStage(false), true);
-            pipeline.Add(new EncryptStage(OpensslCipher.Chacha20, "test", false));
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", false));
+            pipeline.Add(new GzipStage(new TestConfig(), false), true);
+            pipeline.Add(new EncryptStage(new TestConfig(), OpensslCipher.Chacha20, "test", false));
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", false));
             pipeline.Add(new ProcessStage("cat", "/usr/bin/cat", string.Empty));
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", true));
-            pipeline.Add(new EncryptStage(OpensslCipher.Chacha20, "test", true));
-            pipeline.Add(new GzipStage(true));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", true));
+            pipeline.Add(new EncryptStage(new TestConfig(), OpensslCipher.Chacha20, "test", true));
+            pipeline.Add(new GzipStage(new TestConfig(), true));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -185,9 +185,9 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", false), true);
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", true));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", false), true);
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", true));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -202,24 +202,9 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", false), true);
-            pipeline.Add(new StreamAuthStage("cafeba", "1337", true));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
-            pipeline.Add(s => new ShortOutput(s));
-            pipeline.Start();
-            pipeline.WaitForDone();
-            Assert.True(pipeline.Done, "Done is not true");
-            Assert.True(pipeline.Failed, "Failed is not true");
-        }
-
-        [Test()]
-        public void StreamAuthTestFailureIv()
-        {
-            var pipeline = new Pipeline();
-            pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", false), true);
-            pipeline.Add(new StreamAuthStage("cafebabe", "133723", true));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", false), true);
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafeba", true));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -232,10 +217,10 @@ namespace ThrowException.CSharpLibs.PipelineTest
         {
             var pipeline = new Pipeline();
             pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", false), true);
-            pipeline.Add(new EncryptStage(OpensslCipher.Camellia256CTR, "cafebabe", false), true);
-            pipeline.Add(new StreamAuthStage("cafebabe", "1337", true));
-            pipeline.Add(new HashStage(OpensslHash.SHA256));
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", false), true);
+            pipeline.Add(new EncryptStage(new TestConfig(), OpensslCipher.Camellia256CTR, "cafebabe", false), true);
+            pipeline.Add(new StreamAuthStage(new TestConfig(), "cafebabe", true));
+            pipeline.Add(new HashStage(new TestConfig(), OpensslHash.SHA256));
             pipeline.Add(s => new ShortOutput(s));
             pipeline.Start();
             pipeline.WaitForDone();
@@ -251,7 +236,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             using (var pipeline = new Pipeline())
             {
                 pipeline.Add(new ProcessStage("dd-zero", "/usr/bin/dd", "if=/dev/zero bs=1M count=16"));
-                pipeline.Add(new EncryptStage(OpensslCipher.Chacha20, "cafebabe", false), true);
+                pipeline.Add(new EncryptStage(new TestConfig(), OpensslCipher.Chacha20, "cafebabe", false), true);
                 pipeline.Add(s => new FileOutput(s, filename));
                 pipeline.Start();
                 pipeline.WaitForDone();
@@ -263,7 +248,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             using (var pipeline = new Pipeline())
             {
                 pipeline.Add(new DumpStage(filename));
-                pipeline.Add(new EncryptStage(OpensslCipher.Chacha20, "cafebabe", true), true);
+                pipeline.Add(new EncryptStage(new TestConfig(), OpensslCipher.Chacha20, "cafebabe", true), true);
                 pipeline.Add(s => new ShortOutput(s));
                 pipeline.Start();
                 pipeline.WaitForDone();

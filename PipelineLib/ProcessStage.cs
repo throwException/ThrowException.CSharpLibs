@@ -102,20 +102,28 @@ namespace ThrowException.CSharpLibs.PipelineLib
 
         public override void Start()
         {
-            var info = new ProcessStartInfo(_binaryPath, _arguments)
+            try
             {
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true
-            };
-            foreach (var variable in _environment)
-            {
-                info.Environment.Add(variable.Key, variable.Value);
+                var info = new ProcessStartInfo(_binaryPath, _arguments)
+                {
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true
+                };
+                foreach (var variable in _environment)
+                {
+                    info.Environment.Add(variable.Key, variable.Value);
+                }
+                _process = Process.Start(info);
+                _stderrReader = new Thread(StderrReader);
+                _stderrReader.Start();
             }
-            _process = Process.Start(info);
-            _stderrReader = new Thread(StderrReader);
-            _stderrReader.Start();
+            catch (Exception exception)
+            {
+                Console.Error.WriteLine(exception.Message);
+                throw;
+            }
         }
 
         public override void WaitForDone()

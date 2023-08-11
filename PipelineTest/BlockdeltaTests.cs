@@ -38,7 +38,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             File.Copy(_block00file, _block01ufile);
 
             var createPipeline = new Pipeline();
-            createPipeline.Add(new BlockdeltaCreateStage(_block00file, _block01file));
+            createPipeline.Add(new BlockdeltaCreateStage(new TestConfig(), _block00file, _block01file));
             createPipeline.Add(s => new ShortOutput(s));
             createPipeline.Start();
             createPipeline.WaitForDone();
@@ -48,7 +48,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
 
             var applyPipeline = new Pipeline();
             applyPipeline.Add(new InputStage(update01));
-            applyPipeline.Add(new BlockdeltaApplyStage(_block01ufile));
+            applyPipeline.Add(new BlockdeltaApplyStage(new TestConfig(), _block01ufile));
             applyPipeline.Add(s => new ShortOutput(s));
             applyPipeline.Start();
             applyPipeline.WaitForDone();

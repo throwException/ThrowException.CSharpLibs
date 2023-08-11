@@ -38,7 +38,6 @@
     <Compile Include="Output.cs" />
     <Compile Include="ShortOutput.cs" />
     <Compile Include="EncryptStage.cs" />
-    <Compile Include="Software.cs" />
     <Compile Include="OpensslCipher.cs" />
     <Compile Include="GzipStage.cs" />
     <Compile Include="HashStage.cs" />
@@ -51,6 +50,7 @@
     <Compile Include="BlockdeltaApplyStage.cs" />
     <Compile Include="DumpStage.cs" />
     <Compile Include="FileOutput.cs" />
+    <Compile Include="IConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BytesUtilLib\BytesUtilLib.csproj">

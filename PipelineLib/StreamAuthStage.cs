@@ -6,22 +6,19 @@ namespace ThrowException.CSharpLibs.PipelineLib
     public class StreamAuthStage : ProcessStage
     {
         private const string KeyEnvironmentVariable = "STREAMAUTH_KEY";
-        private const string IvEnvironmentVariable = "STREAMAUTH_IV";
 
         private static string ConstructArguments(bool verify)
         {
             return string.Format(
-                "{0} {1} {2}", 
+                "{0} {1}", 
                 verify ? "verify" : "add",
-                KeyEnvironmentVariable,
-                IvEnvironmentVariable);
+                KeyEnvironmentVariable);
         }
 
-        public StreamAuthStage(string key, string iv, bool verify)
-            : base("streamauth", Software.StreamAuthPath, ConstructArguments(verify))
+        public StreamAuthStage(IConfig config, string key, bool verify)
+            : base("streamauth", config.StreamAuthPath, ConstructArguments(verify))
         {
             WithEnvironment(KeyEnvironmentVariable, key);
-            WithEnvironment(IvEnvironmentVariable, iv);
         }
     }
 }

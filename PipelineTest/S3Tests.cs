@@ -47,7 +47,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
 
             var uploadPipeline = new Pipeline();
             uploadPipeline.Add(new InputStage(data));
-            uploadPipeline.Add(new S3UploadStage(config.EndpointUrl, config.AwsAccessKeyId, config.AwsSecretAccessKey, config.Bucket, config.Key, 32), true);
+            uploadPipeline.Add(new S3UploadStage(new TestConfig(), config.EndpointUrl, config.AwsAccessKeyId, config.AwsSecretAccessKey, config.Bucket, config.Key, 32), true);
             uploadPipeline.Add(s => new ShortOutput(s));
             uploadPipeline.Start();
             uploadPipeline.WaitForDone();
@@ -56,7 +56,7 @@ namespace ThrowException.CSharpLibs.PipelineTest
             Assert.AreEqual(uploadPipeline.TotalBytes, 16, "Upload total bytes do not match");
 
             var downloadPipeline = new Pipeline();
-            downloadPipeline.Add(new S3DownloadStage(config.EndpointUrl, config.AwsAccessKeyId, config.AwsSecretAccessKey, config.Bucket, config.Key));
+            downloadPipeline.Add(new S3DownloadStage(new TestConfig(), config.EndpointUrl, config.AwsAccessKeyId, config.AwsSecretAccessKey, config.Bucket, config.Key));
             downloadPipeline.Add(new ProcessStage("cat", "/usr/bin/cat", string.Empty), true);
             downloadPipeline.Add(s => new ShortOutput(s));
             downloadPipeline.Start();

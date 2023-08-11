@@ -16,8 +16,8 @@ namespace ThrowException.CSharpLibs.PipelineLib
                 PasswordEnvironmentVariable);
         }
 
-        public EncryptStage(OpensslCipher cipher, string key, bool decrypt)
-            : base("openssl-enc", Software.OpensslPath, ConstructArguments(cipher, decrypt))
+        public EncryptStage(IConfig config, OpensslCipher cipher, string key, bool decrypt)
+            : base("openssl-enc", config.OpensslPath, ConstructArguments(cipher, decrypt))
         {
             WithEnvironment(PasswordEnvironmentVariable, key);
         }

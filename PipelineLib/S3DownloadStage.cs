@@ -21,12 +21,13 @@ namespace ThrowException.CSharpLibs.PipelineLib
         }
 
         public S3DownloadStage(
+            IConfig config,
             string endpointUrl, 
             string awsAccessKeyId, 
             string awsSecretAccessKey,
             string bucket,
             string key)
-            : base("s3-upload", Software.AwsCliPath, ConstructArguments(endpointUrl, bucket, key))
+            : base("s3-upload", config.AwsCliPath, ConstructArguments(endpointUrl, bucket, key))
         {
             WithEnvironment(AwsAccessKeyIdEnvironmentVariable, awsAccessKeyId);
             WithEnvironment(AwsSecretAccessKeyEnvironmentVariable, awsSecretAccessKey);

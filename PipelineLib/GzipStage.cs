@@ -5,8 +5,8 @@ namespace ThrowException.CSharpLibs.PipelineLib
 {
     public class GzipStage : ProcessStage
     {
-        public GzipStage(bool decompress)
-            : base("gzip", Software.GzipPath, decompress ? "-d" : string.Empty)
+        public GzipStage(IConfig config, bool decompress)
+            : base("gzip", config.GzipPath, decompress ? "-d" : string.Empty)
         {
         }
     }

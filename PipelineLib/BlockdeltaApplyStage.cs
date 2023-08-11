@@ -12,8 +12,8 @@ namespace ThrowException.CSharpLibs.PipelineLib
                 block);
         }
 
-        public BlockdeltaApplyStage(string block)
-            : base("blockdelta-create", Software.BlockdeltaPath, ConstructArguments(block))
+        public BlockdeltaApplyStage(IConfig config, string block)
+            : base("blockdelta-create", config.BlockdeltaPath, ConstructArguments(block))
         {
         }
     }

@@ -35,6 +35,7 @@
     <Compile Include="PipelineTests.cs" />
     <Compile Include="S3Tests.cs" />
     <Compile Include="BlockdeltaTests.cs" />
+    <Compile Include="TestConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
