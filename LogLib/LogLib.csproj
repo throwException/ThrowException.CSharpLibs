@@ -48,6 +48,7 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="LogSeverity.cs" />
     <Compile Include="LogEntry.cs" />
+    <Compile Include="DummyLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
