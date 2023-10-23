@@ -32,6 +32,11 @@ namespace ThrowException.CSharpLibs.BytesUtilLib
             _entries = new Queue<Entry>();
         }
 
+        public int EntryCount
+        {
+            get { return _entries.Count; }
+        }
+
         public void Add(long bytes)
         {
             _latest = new Entry(bytes);
