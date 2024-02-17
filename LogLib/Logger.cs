@@ -115,41 +115,6 @@ namespace ThrowException.CSharpLibs.LogLib
             }
         }
 
-        public void Debug(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Debug, text, arguments).ToList();
-        }
-
-        public void Verbose(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Verbose, text, arguments).ToList();
-        }
-
-        public void Info(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Info, text, arguments).ToList();
-        }
-
-        public void Notice(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Notice, text, arguments).ToList();
-        }
-
-        public void Warning(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Warning, text, arguments).ToList();
-        }
-
-        public void Error(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Error, text, arguments).ToList();
-        }
-
-        public void Critical(string text, params object[] arguments)
-        {
-            Write(LogSeverity.Critical, text, arguments).ToList().First();
-        }
-
         private IEnumerable<LogEntry> Write(LogSeverity severity, string text, params object[] arguments)
         {
             if (!string.IsNullOrEmpty(text))
@@ -193,18 +158,6 @@ namespace ThrowException.CSharpLibs.LogLib
             AdditionalWrite(entry);
 
             return entry;
-        }
-
-        public void Critical(Exception exception)
-        {
-            Critical(exception.Message);
-            Debug(exception.StackTrace);
-        }
-
-        public void Error(Exception exception)
-        {
-            Error(exception.Message);
-            Debug(exception.StackTrace);
         }
 
         public void Log(LogSeverity severity, string text, params object[] arguments)
