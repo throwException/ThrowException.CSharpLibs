@@ -162,7 +162,7 @@ namespace ThrowException.CSharpLibs.LogLib
 
         public void Log(LogSeverity severity, string text, params object[] arguments)
         {
-            Write(severity, text, arguments);
+            Write(severity, text, arguments).ToList();
         }
 
         protected virtual void AdditionalWrite(LogEntry entry)
