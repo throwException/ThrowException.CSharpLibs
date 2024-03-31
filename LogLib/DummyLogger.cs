@@ -9,7 +9,15 @@ namespace ThrowException.CSharpLibs.LogLib
         {
         }
 
+        public void Flush()
+        {
+        }
+
         public void Log(LogSeverity severity, string text, params object[] arguments)
+        {
+        }
+
+        public void Process()
         {
         }
     }

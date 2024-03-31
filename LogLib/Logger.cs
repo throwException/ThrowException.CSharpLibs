@@ -168,5 +168,13 @@ namespace ThrowException.CSharpLibs.LogLib
         protected virtual void AdditionalWrite(LogEntry entry)
         { 
         }
+
+        public void Flush()
+        {
+        }
+
+        public void Process()
+        {
+        }
     }
 }

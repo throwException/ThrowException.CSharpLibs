@@ -6,6 +6,10 @@ namespace ThrowException.CSharpLibs.LogLib
     public interface ILogger : IDisposable
     {
         void Log(LogSeverity severity, string text, params object[] arguments);
+
+        void Flush();
+
+        void Process();
     }
 
     public static class ILoggerExtensions
@@ -50,6 +54,16 @@ namespace ThrowException.CSharpLibs.LogLib
         public static void Verbose(this ILogger logger, string text, params object[] arguments)
         {
             logger.Log(LogSeverity.Verbose, text, arguments);
+        }
+
+        public static void VeryVerbose(this ILogger logger, string text, params object[] arguments)
+        {
+            logger.Log(LogSeverity.VeryVerbose, text, arguments);
+        }
+
+        public static void DataVerbose(this ILogger logger, string text, params object[] arguments)
+        {
+            logger.Log(LogSeverity.DataVerbose, text, arguments);
         }
 
         public static void Warning(this ILogger logger, string text, params object[] arguments)

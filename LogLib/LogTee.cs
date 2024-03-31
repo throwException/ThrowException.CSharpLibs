@@ -38,5 +38,21 @@ namespace ThrowException.CSharpLibs.LogLib
             }
             _loggers.Clear();
         }
+
+        public void Flush()
+        {
+            foreach (var logger in _loggers)
+            {
+                logger.Flush();
+            }
+        }
+
+        public void Process()
+        {
+            foreach (var logger in _loggers)
+            {
+                logger.Process();
+            }
+        }
     }
 }
