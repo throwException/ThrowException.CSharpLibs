@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\S3BackupManager\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.props" Condition="Exists('..\..\S3BackupManager\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.props')" />
   <Import Project="..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.props" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.props')" />
   <PropertyGroup>
+    <AssemblyName>ThrowException.CSharpLibs.LogLib</AssemblyName>
+    <Authors>Stefan Thöni</Authors>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Description>A small logging library.</Description>
+    <OutputType>Library</OutputType>
+    <Owners>Stefan Thöni</Owners>
+    <PackageIconUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/binary.svg</PackageIconUrl>
+    <PackageId>ThrowException.CSharpLibs.LogLib</PackageId>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/throwException/ThrowException.CSharpLibs</PackageProjectUrl>
+    <PackageTags>Logging</PackageTags>
+    <PackageVersion>1.0.1</PackageVersion>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{498DA9AF-A391-403C-9362-1C9472AD4EA9}</ProjectGuid>
-    <OutputType>Library</OutputType>
     <RootNamespace>ThrowException.CSharpLibs.LogLib</RootNamespace>
-    <AssemblyName>LogLib</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <PackageId>ThrowException.CSharpLibs.LogLib</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
-    <Authors>Stefan Thöni</Authors>
-    <Description>A small logging library.</Description>
-    <Owners>Stefan Thöni</Owners>
-    <PackageProjectUrl>https://github.com/throwException/ThrowException.CSharpLibs</PackageProjectUrl>
     <Summary>A small logging library.</Summary>
-    <PackageIconUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/binary.svg</PackageIconUrl>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <Title>LogLib</Title>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/throwException/ThrowException.CSharpLibs/master/LICENSE</PackageLicenseUrl>
-    <PackageTags>Logging</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,5 +64,4 @@
     </MonoDevelop>
   </ProjectExtensions>
   <Import Project="..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.targets" Condition="Exists('..\packages\NuGet.Build.Packaging.0.2.0\build\NuGet.Build.Packaging.targets')" />
-  <Import Project="..\..\S3BackupManager\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.targets" Condition="Exists('..\..\S3BackupManager\packages\NuGet.Build.Packaging.0.2.2\build\NuGet.Build.Packaging.targets')" />
 </Project>
