@@ -25,6 +25,8 @@ namespace ThrowException.CSharpLibs.LogLib
 
         public TimeSpan KeepLogFiles { get; set; } = TimeSpan.FromDays(5);
 
+        private readonly object _lock = new object();
+
         public void EnableLogFile(LogSeverity severity, string logFilePrefix)
         {
             LogFilePrefix = logFilePrefix;
@@ -162,7 +164,10 @@ namespace ThrowException.CSharpLibs.LogLib
 
         public void Log(LogSeverity severity, string text, params object[] arguments)
         {
-            Write(severity, text, arguments).ToList();
+            lock (_lock)
+            {
+                Write(severity, text, arguments).ToList();
+            }
         }
 
         protected virtual void AdditionalWrite(LogEntry entry)
