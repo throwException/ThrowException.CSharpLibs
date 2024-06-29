@@ -4,6 +4,30 @@ using System.Text;
 
 namespace ThrowException.CSharpLibs.BytesUtilLib
 {
+    public class DeserializerException : IOException
+    {
+        public DeserializerException(string message)
+         : base(message)
+        {
+        }
+    }
+
+    public class DeserializerOutOfBytesException : DeserializerException
+    {
+        public DeserializerOutOfBytesException()
+         : base("Not enough bytes in deserializer.")
+        {
+        }
+    }
+
+    public class DeserializerFieldTooLargeException : DeserializerException
+    {
+        public DeserializerFieldTooLargeException()
+         : base("Field size too large in deserializer.")
+        {
+        }
+    }
+
     public class Deserializer : IDisposable
     {
         private Stream _stream;
@@ -32,8 +56,25 @@ namespace ThrowException.CSharpLibs.BytesUtilLib
             }
         }
 
+        private long AvailableBytes
+        {
+            get
+            {
+                if (_stream.CanSeek)
+                {
+                    return _stream.Length - _stream.Position;
+                }
+                else
+                {
+                    return long.MaxValue;
+                }
+            }
+        }
+
         public byte[] ReadBytes(int count)
         {
+            if (AvailableBytes < count)
+                throw new DeserializerOutOfBytesException();
             var bytes = new byte[count];
             if (_stream.Read(bytes, 0, bytes.Length) < count)
                 throw new EndOfStreamException();
@@ -136,6 +177,19 @@ namespace ThrowException.CSharpLibs.BytesUtilLib
         public string ReadStringPrefixed()
         {
             return Encoding.UTF8.GetString(ReadBytesPrefixed());
+        }
+
+        public byte[] ReadBytesPrefixed(int maxLength)
+        {
+            var length = ReadInt32();
+            if (length > maxLength)
+                throw new DeserializerFieldTooLargeException();
+            return ReadBytes(length);
+        }
+
+        public string ReadStringPrefixed(int maxLength)
+        {
+            return Encoding.UTF8.GetString(ReadBytesPrefixed(maxLength));
         }
     }
 }

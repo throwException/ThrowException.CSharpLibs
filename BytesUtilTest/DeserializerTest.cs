@@ -163,5 +163,82 @@ namespace ThrowException.CSharpLibs.BytesUtilTest
                 Assert.AreEqual(deserializer.ReadBytesPrefixed(), new byte[] { 0xca, 0xfe });
             }
         }
+
+        private void ExpectException<T>(Action action)
+            where T : Exception
+        {
+            try
+            {
+                action();
+                Assert.Fail("Expected exception didn't occur");
+            }
+            catch (Exception exception)
+            {
+                if (exception.GetType() != typeof(T))
+                {
+                    Assert.Fail("Expected exception has wrong type");
+                }
+            }
+        }
+
+        [Test()]
+        public void DeserializerExceptions()
+        {
+            ExpectException<DeserializerOutOfBytesException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[3]))
+                {
+                    deserializer.ReadBytes(4);
+                }
+            });
+
+            ExpectException<DeserializerOutOfBytesException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[3]))
+                {
+                    deserializer.ReadInt32();
+                }
+            });
+
+            ExpectException<DeserializerOutOfBytesException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[3]))
+                {
+                    deserializer.ReadInt64();
+                }
+            });
+
+            ExpectException<DeserializerOutOfBytesException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[3]))
+                {
+                    deserializer.ReadBytesPrefixed();
+                }
+            });
+
+            ExpectException<DeserializerOutOfBytesException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[] { 0, 0, 0, 100, 0 } ))
+                {
+                    deserializer.ReadBytesPrefixed();
+                }
+            });
+
+            ExpectException<DeserializerFieldTooLargeException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[] { 0, 0, 0, 100, 0, 0, 0, 0, 0 }))
+                {
+                    deserializer.ReadBytesPrefixed(4);
+                }
+            });
+
+            ExpectException<DeserializerFieldTooLargeException>(() =>
+            {
+                using (var deserializer = new Deserializer(new byte[] { 0, 0, 0, 100, 0, 0, 0, 0, 0 }))
+                {
+                    deserializer.ReadStringPrefixed(4);
+                }
+            });
+        }
     }
 }
