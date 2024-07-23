@@ -8,6 +8,7 @@ using Npgsql;
 using NpgsqlTypes;
 using ThrowException.CSharpLibs.BytesUtilLib;
 using ThrowException.CSharpLibs.TypeParserLib;
+using ThrowException.CSharpLibs.DataObjectLib;
 
 namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
 {
@@ -139,7 +140,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             return (transaction as Transaction)?.Base;
         }
 
-        public void Delete<T>(ITransaction transaction = null) where T : DatabaseObject, new()
+        public void Delete<T>(ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var text = string.Format(
                 "DELETE FROM {0}", 
@@ -148,7 +150,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             command.ExecuteNonQuery();
         }
 
-        public void Delete<T>(Guid id, ITransaction transaction = null) where T : DatabaseObject, new()
+        public void Delete<T>(Guid id, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var variableName = CreateVariableName();
             var text = string.Format(
@@ -160,7 +163,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             command.ExecuteNonQuery();
         }
 
-        public void Delete<T>(Condition condition, ITransaction transaction = null) where T : DatabaseObject, new()
+        public void Delete<T>(Condition condition, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var dbCondition = ConvertCondition<T>(condition);
             var text = string.Format("DELETE FROM {0} WHERE {1}", GetTableName(typeof(T)), dbCondition.Text);
@@ -215,12 +219,19 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             }
         }
 
-        public T Load<T>(Guid id, ITransaction transaction = null) where T : DatabaseObject, new()
+        private DatabaseObject DatabaseObject<T>(T obj)
+            where T : class, IDataObject, new()
+        {
+            return obj as DatabaseObject;
+        }
+
+        public T Load<T>(Guid id, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var text = string.Format(
                 "SELECT {0} FROM {1} WHERE id = @id",
-                string.Join(", ", prototype.Fields.Where(f => f.IsInDatabase).Select(GetColumnName)),
+                string.Join(", ", DatabaseObject(prototype).Fields.Where(f => f.IsInDatabase).Select(GetColumnName)),
                 GetTableName(typeof(T)));
             var command = new NpgsqlCommand(text, _connection, ToTransaction(transaction));
             command.Parameters.Add(new NpgsqlParameter("@id", id));
@@ -230,7 +241,7 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
                 {
                     var obj = CreateObjectWidthId<T>(id);
                     int index = 0;
-                    foreach (var field in obj.Fields.Where(f => f.IsInDatabase))
+                    foreach (var field in DatabaseObject(obj).Fields.Where(f => f.IsInDatabase))
                     {
                         AssignDatabaseValue(reader, index, field);
                         index++;
@@ -241,12 +252,13 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             return null;
         }
 
-        public IEnumerable<T> Load<T>(ITransaction transaction = null) where T : DatabaseObject, new()
+        public IEnumerable<T> Load<T>(ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var text = string.Format(
                 "SELECT id, {0} FROM {1}",
-                string.Join(", ", prototype.Fields.Where(f => f.IsInDatabase).Select(GetColumnName)),
+                string.Join(", ", DatabaseObject(prototype).Fields.Where(f => f.IsInDatabase).Select(GetColumnName)),
                 GetTableName(typeof(T)));
             var command = new NpgsqlCommand(text, _connection, ToTransaction(transaction));
             using (var reader = command.ExecuteReader())
@@ -255,7 +267,7 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
                 {
                     var obj = CreateObjectWidthId<T>(reader.GetGuid(0));
                     int index = 1;
-                    foreach (var field in obj.Fields.Where(f => f.IsInDatabase))
+                    foreach (var field in DatabaseObject(obj).Fields.Where(f => f.IsInDatabase))
                     {
                         AssignDatabaseValue(reader, index, field);
                         index++;
@@ -265,13 +277,14 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             }
         }
 
-        public IEnumerable<T> Load<T>(Condition condition, ITransaction transaction = null) where T : DatabaseObject, new()
+        public IEnumerable<T> Load<T>(Condition condition, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var dbCondition = ConvertCondition<T>(condition);
             var text = string.Format(
                 "SELECT id, {0} FROM {1} WHERE {2}",
-                string.Join(", ", prototype.Fields.Where(f => f.IsInDatabase).Select(GetColumnName)),
+                string.Join(", ", DatabaseObject(prototype).Fields.Where(f => f.IsInDatabase).Select(GetColumnName)),
                 GetTableName(typeof(T)),
                 dbCondition.Text);
             var command = new NpgsqlCommand(text, _connection, ToTransaction(transaction));
@@ -282,7 +295,7 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
                 {
                     var obj = CreateObjectWidthId<T>(reader.GetGuid(0));
                     int index = 1;
-                    foreach (var field in obj.Fields.Where(f => f.IsInDatabase))
+                    foreach (var field in DatabaseObject(obj).Fields.Where(f => f.IsInDatabase))
                     {
                         AssignDatabaseValue(reader, index, field);
                         index++;
@@ -304,12 +317,14 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             }
         }
 
-        public void Save(DatabaseObject obj, ITransaction transaction = null)
+        public void Save<T>(T obj, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
-            if (obj.New)
+            var dbo = DatabaseObject(obj);
+            if (dbo.New)
             {
                 var names = new Dictionary<DatabaseField, string>();
-                var fields = obj.Fields.Where(f => f.IsInDatabase).ToList();
+                var fields = dbo.Fields.Where(f => f.IsInDatabase).ToList();
                 foreach (var field in fields)
                 {
                     names.Add(field, CreateVariableName());
@@ -338,20 +353,20 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
                 }
                 command.ExecuteNonQuery();
             }
-            else if (obj.Modified)
+            else if (dbo.Modified)
             {
                 var names = new Dictionary<DatabaseField, string>();
-                foreach (var field in obj.Fields.Where(f => f.IsInDatabase && f.Modified))
+                foreach (var field in dbo.Fields.Where(f => f.IsInDatabase && f.Modified))
                 {
                     names.Add(field, CreateVariableName());
                 }
                 var text = string.Format(
                     "UPDATE {0} SET {1} WHERE id = @id",
                     GetTableName(obj.GetType()),
-                    string.Join(", ", obj.Fields.Where(f => f.IsInDatabase).Select(f => string.Format("{0} = {1}", GetColumnName(f), names[f]))));
+                    string.Join(", ", dbo.Fields.Where(f => f.IsInDatabase).Select(f => string.Format("{0} = {1}", GetColumnName(f), names[f]))));
                 var command = new NpgsqlCommand(text, _connection, ToTransaction(transaction));
                 command.Parameters.Add(new NpgsqlParameter("@id", obj.Id));
-                foreach (var field in obj.Fields.Where(f => f.IsInDatabase && f.Modified))
+                foreach (var field in dbo.Fields.Where(f => f.IsInDatabase && f.Modified))
                 {
                     var parameter = new NpgsqlParameter(names[field], GetTypeHandler(field.DatabaseType).DbType);
                     if (field.DatabaseValue == null)
@@ -615,7 +630,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             }
         }
 
-        public IEnumerable<Guid> List<T>(ITransaction transaction = null) where T : DatabaseObject, new()
+        public IEnumerable<Guid> List<T>(ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var text = string.Format(
@@ -631,7 +647,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             }
         }
 
-        public IEnumerable<Guid> List<T>(Condition condition, ITransaction transaction = null) where T : DatabaseObject, new()
+        public IEnumerable<Guid> List<T>(Condition condition, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var dbCondition = ConvertCondition<T>(condition);
@@ -685,12 +702,13 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
         }
 
         public DbCondition ConvertCondition<T>(Condition condition)
-             where T : DatabaseObject, new()
+             where T : class, IDataObject, new()
         { 
             if (condition is CompareCondition compareCondition)
             {
                 var temp = new T();
-                var field = temp.Fields.Single(f => f.FieldName == compareCondition.FieldName);
+                var tempDbo = DatabaseObject(temp);
+                var field = tempDbo.Fields.Single(f => f.FieldName == compareCondition.FieldName);
                 var columnName = GetColumnName(field);
                 var variableName = CreateVariableName();
                 var text = string.Format(
@@ -720,7 +738,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             }
         }
 
-        public long Count<T>(ITransaction transaction = null) where T : DatabaseObject, new()
+        public long Count<T>(ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var text = string.Format(
@@ -730,7 +749,8 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             return (long)command.ExecuteScalar();
         }
 
-        public long Count<T>(Condition condition, ITransaction transaction = null) where T : DatabaseObject, new()
+        public long Count<T>(Condition condition, ITransaction transaction = null)
+            where T : class, IDataObject, new()
         {
             var prototype = new T();
             var dbCondition = ConvertCondition<T>(condition);
@@ -741,6 +761,11 @@ namespace ThrowException.CSharpLibs.PostgresDatabaseObjectLib
             var command = new NpgsqlCommand(text, _connection, ToTransaction(transaction));
             command.Parameters.AddRange(dbCondition.Parameters.ToArray());
             return (long)command.ExecuteScalar();
+        }
+
+        public IDataContext CreateContext()
+        {
+            return new DatabaseContext(this);
         }
     }
 

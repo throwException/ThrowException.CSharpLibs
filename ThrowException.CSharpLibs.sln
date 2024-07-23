@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresDatabaseObjectLib",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresDatabaseObjectTest", "PostgresDatabaseObjectTest\PostgresDatabaseObjectTest.csproj", "{AF1F420D-0F34-42D5-9D10-2D9D876D82D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataObjectLib", "DataObjectLib\DataObjectLib.csproj", "{0C716078-CB8B-442A-98DD-411727F0B228}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,5 +106,9 @@ Global
 		{AF1F420D-0F34-42D5-9D10-2D9D876D82D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF1F420D-0F34-42D5-9D10-2D9D876D82D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF1F420D-0F34-42D5-9D10-2D9D876D82D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C716078-CB8B-442A-98DD-411727F0B228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C716078-CB8B-442A-98DD-411727F0B228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C716078-CB8B-442A-98DD-411727F0B228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C716078-CB8B-442A-98DD-411727F0B228}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

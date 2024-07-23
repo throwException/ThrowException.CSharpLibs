@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ThrowException.CSharpLibs.DataObjectLib;
 
 namespace ThrowException.CSharpLibs.DatabaseObjectLib
 {
-    public class DatabaseContext : IDisposable, IDatabaseContext
+    public class DatabaseContext : IDataContext
     {
         private IDatabase _database;
         private ITransaction _transaction;
@@ -33,37 +34,51 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             _transaction = null;
         }
 
+        private DatabaseObject DatabaseObject<T>(T obj)
+            where T : class, IDataObject, new()
+        {
+            return obj as DatabaseObject;
+        }
+
+        private T TObject<T>(DatabaseObject obj)
+            where T : class, IDataObject, new()
+        {
+            return obj as T;
+        }
+
         public T Create<T>(Guid id)
-            where T : DatabaseObject, new()
+            where T : class, IDataObject, new()
         {
             var obj = (T)typeof(T)
                 .GetConstructor(new Type[] { typeof(Guid), typeof(bool) })
                 .Invoke(new object[] { id, true });
-            obj.EagerLoad(this);
+            DatabaseObject(obj).EagerLoad(this);
             return obj;
         }
 
         public T Create<T>()
-            where T : DatabaseObject, new()
+            where T : class, IDataObject, new()
         {
             var obj = new T();
-            obj.EagerLoad(this);
+            DatabaseObject(obj).EagerLoad(this);
             return obj;
         }
 
-        public void Save(DatabaseObject obj)
+        public void Save<T>(T obj)
+            where T : class, IDataObject, new()
         {
-            if (obj.Context != this)
+            if (DatabaseObject(obj).Context != this)
                 throw new InvalidOperationException("Context mismatch");
 
             _database.Save(obj, _transaction);
             if (!_cache.ContainsKey(obj.Id))
             {
-                _cache.Add(obj.Id, obj);
+                _cache.Add(obj.Id, DatabaseObject(obj));
             }
         }
 
-        public void Delete<T>(Guid id) where T : DatabaseObject, new()
+        public void Delete<T>(Guid id)
+            where T : class, IDataObject, new()
         {
             _database.Delete<T>(id, _transaction);
             if (_cache.ContainsKey(id))
@@ -72,7 +87,8 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             }
         }
 
-        public void Delete<T>(Condition condition) where T : DatabaseObject, new()
+        public void Delete<T>(Condition condition)
+            where T : class, IDataObject, new()
         {
             _database.Delete<T>(condition, _transaction);
             foreach (var o in _cache.Values.Where(condition.Match).ToList())
@@ -81,25 +97,27 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             }
         }
 
-        public T Load<T>(Guid id) where T : DatabaseObject, new()
+        public T Load<T>(Guid id)
+            where T : class, IDataObject, new()
         {
             if (_cache.ContainsKey(id))
             {
-                return (T)_cache[id];
+                return TObject<T>(_cache[id]);
             }
             else
             {
                 T obj = _database.Load<T>(id, _transaction);
                 if (obj != null)
                 {
-                    _cache.Add(obj.Id, obj);
-                    obj.EagerLoad(this);
+                    _cache.Add(obj.Id, DatabaseObject(obj));
+                    DatabaseObject(obj).EagerLoad(this);
                 }
                 return obj;
             }
         }
 
-        public IEnumerable<T> Load<T>() where T : DatabaseObject, new()
+        public IEnumerable<T> Load<T>()
+            where T : class, IDataObject, new()
         {
             var local = _cache.Values.Where(o => o is T).ToList();
             var count = _database.Count<T>(_transaction);
@@ -111,7 +129,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             {
                 foreach (var obj in local)
                 {
-                    yield return (T)obj;
+                    yield return TObject<T>(obj);
                 }
             }
             else if (!local.Any())
@@ -119,11 +137,11 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 var list = _database.Load<T>(_transaction).ToList();
                 foreach (var obj in list)
                 {
-                    _cache.Add(obj.Id, obj);
+                    _cache.Add(obj.Id, DatabaseObject(obj));
                 }
                 foreach (var obj in list)
                 {
-                    obj.EagerLoad(this);
+                    DatabaseObject(obj).EagerLoad(this);
                     yield return obj;
                 }
             }
@@ -135,7 +153,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 { 
                     if (_cache.ContainsKey(obj.Id))
                     {
-                        yield return (T)_cache[obj.Id];
+                        yield return TObject<T>(_cache[obj.Id]);
                     }
                     else
                     {
@@ -144,11 +162,11 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 }
                 foreach (var obj in newList)
                 {
-                    _cache.Add(obj.Id, obj);
+                    _cache.Add(obj.Id, DatabaseObject(obj));
                 }
                 foreach (var obj in newList)
                 {
-                    obj.EagerLoad(this);
+                    DatabaseObject(obj).EagerLoad(this);
                     yield return obj;
                 }
             }
@@ -159,7 +177,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 {
                     if (_cache.ContainsKey(id))
                     {
-                        yield return (T)_cache[id];
+                        yield return TObject<T>(_cache[id]);
                         list.Remove(id);
                     }
                 }
@@ -170,18 +188,19 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                     var newList = _database.Load<T>(new InCondition("Id", subList.Cast<object>())).ToList();
                     foreach (var obj in newList)
                     {
-                        _cache.Add(obj.Id, obj);
+                        _cache.Add(obj.Id, DatabaseObject(obj));
                     }
                     foreach (var obj in newList)
                     {
-                        obj.EagerLoad(this);
+                        DatabaseObject(obj).EagerLoad(this);
                         yield return obj;
                     }
                 }
             }
         }
 
-        public IEnumerable<T> Load<T>(Condition condition) where T : DatabaseObject, new()
+        public IEnumerable<T> Load<T>(Condition condition)
+            where T : class, IDataObject, new()
         {
             var local = _cache.Values.Where(o => (o is T) && condition.Match(o)).ToList();
             var count = _database.Count<T>(condition, _transaction);
@@ -193,7 +212,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             {
                 foreach (var obj in local)
                 {
-                    yield return (T)obj;
+                    yield return TObject<T>(obj);
                 }
             }
             else if (!local.Any())
@@ -201,11 +220,11 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 var list = _database.Load<T>(condition, _transaction).ToList();
                 foreach (var obj in list)
                 {
-                    _cache.Add(obj.Id, obj);
+                    _cache.Add(obj.Id, DatabaseObject(obj));
                 }
                 foreach (var obj in list)
                 {
-                    obj.EagerLoad(this);
+                    DatabaseObject(obj).EagerLoad(this);
                     yield return obj;
                 }
             }
@@ -217,7 +236,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 {
                     if (_cache.ContainsKey(obj.Id))
                     {
-                        yield return (T)_cache[obj.Id];
+                        yield return TObject<T>(_cache[obj.Id]);
                     }
                     else
                     {
@@ -226,11 +245,11 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 }
                 foreach (var obj in newList)
                 {
-                    _cache.Add(obj.Id, obj);
+                    _cache.Add(obj.Id, DatabaseObject(obj));
                 }
                 foreach (var obj in newList)
                 {
-                    obj.EagerLoad(this);
+                    DatabaseObject(obj).EagerLoad(this);
                     yield return obj;
                 }
             }
@@ -241,7 +260,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                 {
                     if (_cache.ContainsKey(id))
                     {
-                        yield return (T)_cache[id];
+                        yield return TObject<T>(_cache[id]);
                         list.Remove(id);
                     }
                 }
@@ -252,23 +271,25 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
                     var newList = _database.Load<T>(new InCondition("Id", subList.Cast<object>())).ToList();
                     foreach (var obj in newList)
                     {
-                        _cache.Add(obj.Id, obj);
+                        _cache.Add(obj.Id, DatabaseObject(obj));
                     }
                     foreach (var obj in newList)
                     {
-                        obj.EagerLoad(this);
+                        DatabaseObject(obj).EagerLoad(this);
                         yield return obj;
                     }
                 }
             }
         }
 
-        public long Count<T>() where T : DatabaseObject, new()
+        public long Count<T>()
+            where T : class, IDataObject, new()
         {
             return _database.Count<T>(_transaction);
         }
 
-        public long Count<T>(Condition condition) where T : DatabaseObject, new()
+        public long Count<T>(Condition condition)
+            where T : class, IDataObject, new()
         {
             return _database.Count<T>(condition, _transaction);
         }

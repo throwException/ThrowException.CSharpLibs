@@ -56,6 +56,10 @@
       <Project>{EF54B556-E862-4392-BFD5-6FE31FCCCA35}</Project>
       <Name>TypeParserLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataObjectLib\DataObjectLib.csproj">
+      <Project>{0C716078-CB8B-442A-98DD-411727F0B228}</Project>
+      <Name>DataObjectLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

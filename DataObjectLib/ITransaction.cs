@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ThrowException.CSharpLibs.DatabaseObjectLib
+namespace ThrowException.CSharpLibs.DataObjectLib
 {
     public interface ITransaction : IDisposable
     {

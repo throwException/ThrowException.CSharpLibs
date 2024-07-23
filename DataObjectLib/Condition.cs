@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ThrowException.CSharpLibs.DatabaseObjectLib
+namespace ThrowException.CSharpLibs.DataObjectLib
 {
     public abstract class Condition
     {
-        public abstract bool Match(DatabaseObject obj);
+        public abstract bool Match(IDataObject obj);
 
         public static CompareCondition Equal(string fieldName, object value)
         {
@@ -85,7 +85,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             Value = value;
         }
 
-        public override bool Match(DatabaseObject obj)
+        public override bool Match(IDataObject obj)
         {
             var field = obj.Fields.Single(f => f.FieldName == FieldName);
             return field.Compare(Comparison, Value);
@@ -103,7 +103,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             Values = values.ToList();
         }
 
-        public override bool Match(DatabaseObject obj)
+        public override bool Match(IDataObject obj)
         {
             var field = obj.Fields.Single(f => f.FieldName == FieldName);
             return Values.Any(v => field.Compare(Comparison.Equal, v));
@@ -129,7 +129,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             Op = op;
         }
 
-        public override bool Match(DatabaseObject obj)
+        public override bool Match(IDataObject obj)
         {
             switch (Op)
             {

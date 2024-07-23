@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ThrowException.CSharpLibs.BytesUtilLib;
+using ThrowException.CSharpLibs.DataObjectLib;
 
 namespace ThrowException.CSharpLibs.DatabaseObjectLib
 {
@@ -20,17 +21,17 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
         Fully,
     }
 
-    public abstract class DatabaseField
+    public abstract class DatabaseField : IDataField
     {
         internal PropertyInfo PropertyInfo { get; private set; }
-        internal string FieldName { get; private set; }
+        public string FieldName { get; private set; }
         internal DatabaseObject Object { get; private set; }
         public bool Modified { get; protected set; } = false;
         internal abstract bool IsInDatabase { get; }
         public abstract bool Nullable { get; }
         internal abstract Type DatabaseType { get; }
         internal abstract object DatabaseValue { get; set; }
-        internal abstract bool Compare(Comparison comparison, object value);
+        public abstract bool Compare(Comparison comparison, object value);
         internal abstract void EagerLoad();
         internal abstract Type ReferencedType { get; }
         public abstract LoadingStatus Status { get; }
@@ -54,9 +55,11 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
         }
     }
 
-    public abstract class DatabaseField<T> : DatabaseField
+    public abstract class DatabaseField<T> : DatabaseField, IDataField<T>
     {
         public abstract T Value { get; set; }
+
+        public string Name => FieldName;
     }
 
     public abstract class ReferenceBaseDatabaseField<T, U> : DatabaseField<T>
@@ -156,7 +159,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
             }
         }
 
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             switch (comparison)
             {
@@ -248,7 +251,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
         public LoadingBehavior Loading { get; private set; } = LoadingBehavior.Lazy;
 
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             throw new NotImplementedException();
         }
@@ -384,7 +387,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
         }
     }
 
-    public abstract class ScalarDatabaseField<T> : DatabaseField<T>, IDataField<T>
+    public abstract class ScalarDatabaseField<T> : DatabaseField<T>
     {
         private T _value;
 
@@ -489,7 +492,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class StringField : ScalarDatabaseField<string>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -497,7 +500,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class GuidField : ScalarDatabaseField<Guid>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return EqualValue(Value, comparison, value);
         }
@@ -505,7 +508,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class ByteField : ScalarDatabaseField<byte>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -513,7 +516,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class SByteField : ScalarDatabaseField<sbyte>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -521,7 +524,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class Int16Field : ScalarDatabaseField<short>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -529,7 +532,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class UInt16Field : ScalarDatabaseField<ushort>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -545,7 +548,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class Int32Field : ScalarDatabaseField<int>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -553,7 +556,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class UInt32Field : ScalarDatabaseField<uint>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -569,7 +572,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class Int64Field : ScalarDatabaseField<long>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -577,7 +580,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class UInt64Field : ScalarDatabaseField<ulong>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -593,7 +596,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class FloatField : ScalarDatabaseField<float>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -601,7 +604,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class DoubleField : ScalarDatabaseField<double>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -609,7 +612,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class DecimalField : ScalarDatabaseField<decimal>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -617,7 +620,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class CharField : ScalarDatabaseField<char>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -625,7 +628,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class BytesField : ScalarDatabaseField<byte[]>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             switch (comparison)
             {
@@ -641,7 +644,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class BoolField : ScalarDatabaseField<bool>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             switch (comparison)
             {
@@ -657,7 +660,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class DateTimeField : ScalarDatabaseField<DateTime>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }
@@ -665,7 +668,7 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
 
     public class TimeSpanField : ScalarDatabaseField<TimeSpan>
     {
-        internal override bool Compare(Comparison comparison, object value)
+        public override bool Compare(Comparison comparison, object value)
         {
             return CompareValue(Value, comparison, value);
         }

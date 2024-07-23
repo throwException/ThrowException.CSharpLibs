@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using ThrowException.CSharpLibs.DataObjectLib;
 
 namespace ThrowException.CSharpLibs.DatabaseObjectLib
 {
@@ -14,6 +15,8 @@ namespace ThrowException.CSharpLibs.DatabaseObjectLib
         public bool New { get; private set; } = true;
         public bool Modified { get { return Fields.Any(f => f.Modified); } }
         public DatabaseContext Context { get; private set; }
+
+        IEnumerable<IDataField> IDataObject.Fields => _fields.Cast<IDataField>();
 
         public void EagerLoad(DatabaseContext context)
         {

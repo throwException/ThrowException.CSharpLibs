@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using ThrowException.CSharpLibs.BytesUtilLib;
 using ThrowException.CSharpLibs.PostgresDatabaseObjectLib;
+using ThrowException.CSharpLibs.DataObjectLib;
 
 namespace ThrowException.CSharpLibs.PostgresDatabaseObjectTest
 {
